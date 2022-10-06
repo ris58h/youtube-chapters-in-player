@@ -4,7 +4,7 @@
     z-index: 71;
 
     width: 50%;
-    height: 50%;
+    max-height: 80%;
 }
 
 .__youtube-chapters-in-player .ytp-panel {

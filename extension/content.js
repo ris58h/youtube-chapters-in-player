@@ -73,22 +73,26 @@ document.addEventListener('click', e => {
     const chapterButton = e.target.closest('.ytp-chapter-container')
 
     if (chapterButton) {
-        const chaptersElement = getOrCreateChaptersElement()
-        toggleElementVisibility(chaptersElement)
+        getOrCreateChaptersElement()
+        toggleChaptersElementVisibility()
     } else {
-        const chaptersElement = getOrCreateChaptersElement()
-        hideElement(chaptersElement)
+        hideChaptersElement()
     }
 }, true)
 
+function getChaptersElement() {
+    return document.querySelector('.__youtube-chapters-in-player')
+}
+
 function getOrCreateChaptersElement() {
-    let chaptersElement = document.querySelector('.__youtube-chapters-in-player')
+    let chaptersElement = getChaptersElement()
     if (!chaptersElement) {
+        console.log("DEBUG: create chapters element")
         const container = document.querySelector('#movie_player')
         chaptersElement = document.createElement('div')
         chaptersElement.classList.add('__youtube-chapters-in-player')
         chaptersElement.classList.add('ytp-popup')
-        hideElement(chaptersElement)
+        chaptersElement.style.display = 'none'
         container.appendChild(chaptersElement)
 
         const panelElement = document.createElement('div')
@@ -100,7 +104,7 @@ function getOrCreateChaptersElement() {
         panelElement.appendChild(menuElement)
 
         for (const chapter of chapters) {
-            menuElement.appendChild(createChapterElement(chapter))
+            menuElement.appendChild(toChapterElement(chapter))
         }
 
         const currentTime = document.querySelector('video').currentTime
@@ -108,32 +112,32 @@ function getOrCreateChaptersElement() {
         markChapterAtIndexAsCurrent(chapterIndex)
     }
     return chaptersElement
+}
 
-    function createChapterElement(chapter) {
-        const itemElement = document.createElement('div')
-        itemElement.classList.add('ytp-menuitem')
-        itemElement.addEventListener('click', e => {
-            const video = document.querySelector('video')
-            video.currentTime = chapter.time
-            hideElement(chaptersElement)
-        })
+function toChapterElement(chapter) {
+    const itemElement = document.createElement('div')
+    itemElement.classList.add('ytp-menuitem')
+    itemElement.addEventListener('click', e => {
+        const video = document.querySelector('video')
+        video.currentTime = chapter.time
+        hideChaptersElement()
+    })
 
-        const iconElement = document.createElement('div')
-        iconElement.classList.add('ytp-menuitem-icon')
-        itemElement.appendChild(iconElement)
+    const iconElement = document.createElement('div')
+    iconElement.classList.add('ytp-menuitem-icon')
+    itemElement.appendChild(iconElement)
 
-        const labelElement = document.createElement('div')
-        labelElement.classList.add('ytp-menuitem-label')
-        labelElement.textContent = chapter.text
-        itemElement.appendChild(labelElement)
+    const labelElement = document.createElement('div')
+    labelElement.classList.add('ytp-menuitem-label')
+    labelElement.textContent = chapter.text
+    itemElement.appendChild(labelElement)
 
-        const contentElement = document.createElement('div')
-        contentElement.classList.add('ytp-menuitem-content')
-        contentElement.textContent = chapter.timestamp
-        itemElement.appendChild(contentElement)
+    const contentElement = document.createElement('div')
+    contentElement.classList.add('ytp-menuitem-content')
+    contentElement.textContent = chapter.timestamp
+    itemElement.appendChild(contentElement)
 
-        return itemElement
-    }
+    return itemElement
 }
 
 function getChapterIndex(chapters, time) {
@@ -147,7 +151,11 @@ function getChapterIndex(chapters, time) {
 
 function markChapterAtIndexAsCurrent(chapterIndex) {
     console.log("DEBUG: markChapterAsCurrent " + chapterIndex);
-    const menuItems = document.querySelectorAll('.__youtube-chapters-in-player .ytp-menuitem')
+    const chaptersElement = getChaptersElement()
+    if (!chaptersElement) {
+        return
+    }
+    const menuItems = chaptersElement.querySelectorAll('.ytp-menuitem')
     for (let i = 0; i < menuItems.length; i++) {
         const menuItem = menuItems[i]
         if (i === chapterIndex) {
@@ -166,24 +174,43 @@ function removeChaptersElement() {
     }
 }
 
-function toggleElementVisibility(e) {
-    if (isElementVisible(e)) {
-        hideElement(e)
+function toggleChaptersElementVisibility() {
+    if (isChaptersElementVisible()) {
+        hideChaptersElement()
     } else {
-        showElement(e)
+        showChaptersElement()
+        adjustChaptersElementSize()
     }
 }
 
-function isElementVisible(e) {
-    return !e.style.display
+function isChaptersElementVisible() {
+    const chaptersElement = getChaptersElement()
+    return chaptersElement && !chaptersElement.style.display
 }
 
-function showElement(e) {
-    e.style.display = ''
+function showChaptersElement() {
+    const chaptersElement = getChaptersElement()
+    if (chaptersElement) {
+        chaptersElement.style.display = ''
+    }
 }
 
-function hideElement(e) {
-    e.style.display = 'none'
+function hideChaptersElement() {
+    const chaptersElement = getChaptersElement()
+    if (chaptersElement) {
+        chaptersElement.style.display = 'none'
+    }
+}
+
+function adjustChaptersElementSize() {
+    const chaptersElement = getChaptersElement()
+    if (!chaptersElement) {
+        return
+    }
+    const menu = chaptersElement.querySelector('.ytp-panel-menu')
+    const menuHeight = menu.clientHeight
+    const maxHeight = document.querySelector('#movie_player').clientHeight * 0.9
+    chaptersElement.style.height = Math.min(menuHeight, maxHeight) + 'px'
 }
 
 function getChapters() {
