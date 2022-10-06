@@ -1,0 +1,22 @@
+{
+    "manifest_version": 3,
+
+    "name": "YouTube Chapters In Player",
+    "description": "Shows YouTube chapters right in the player",
+    "version": "0.1.0",
+
+    "applications": {
+            "gecko": {
+            "id": "youtube-chapters-in-player@ris58h"
+        }
+    },
+
+    "content_scripts": [
+        {
+            "matches": ["https://www.youtube.com/*"],
+            "all_frames": true,
+            "js": ["content.js"],
+            "css": ["content.css"]
+        }
+    ]
+}

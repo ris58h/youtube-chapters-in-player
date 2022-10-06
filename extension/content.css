@@ -1,0 +1,23 @@
+.__youtube-chapters-in-player {
+    right: 12px;
+    bottom: 61px;
+    z-index: 71;
+
+    /* TODO: use percent? */
+    width: 272px;
+    /* TODO */
+    height: 240px;
+}
+
+.__youtube-chapters-in-player .ytp-panel {
+    /* TODO */
+    height: 240px;
+}
+
+.__youtube-chapters-in-player .ytp-menuitem[aria-checked=true] {
+    background-color: rgba(255, 255, 255, .1)
+}
+.__youtube-chapters-in-player .ytp-menuitem[aria-checked=true] .ytp-menuitem-icon::before {
+    content: '•';
+    font-weight: bold;
+}
