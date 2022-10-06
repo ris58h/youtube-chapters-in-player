@@ -1,17 +1,15 @@
 .__youtube-chapters-in-player {
-    right: 12px;
+    left: 12px;
     bottom: 61px;
     z-index: 71;
 
-    /* TODO: use percent? */
-    width: 272px;
-    /* TODO */
-    height: 240px;
+    width: 50%;
+    height: 50%;
 }
 
 .__youtube-chapters-in-player .ytp-panel {
-    /* TODO */
-    height: 240px;
+    width: 100%;
+    height: 100%;
 }
 
 .__youtube-chapters-in-player .ytp-menuitem[aria-checked=true] {
