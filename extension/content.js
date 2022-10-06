@@ -117,27 +117,21 @@ function getOrCreateChaptersElement() {
             video.currentTime = chapter.time
             hideElement(chaptersElement)
         })
-    
+
         const iconElement = document.createElement('div')
         iconElement.classList.add('ytp-menuitem-icon')
         itemElement.appendChild(iconElement)
-        // const imgElement = document.createElement('img')
-        // imgElement.src = chapter.imgScr
-        // iconElement.appendChild(imgElement)
-        const checkedElement = document.createElement('span')
-        checkedElement.classList.add('__youtube-chapters-in-player__dot')
-        iconElement.appendChild(checkedElement)
-        
+
         const labelElement = document.createElement('div')
         labelElement.classList.add('ytp-menuitem-label')
         labelElement.textContent = chapter.text
         itemElement.appendChild(labelElement)
-    
+
         const contentElement = document.createElement('div')
         contentElement.classList.add('ytp-menuitem-content')
         contentElement.textContent = chapter.timestamp
         itemElement.appendChild(contentElement)
-    
+
         return itemElement
     }
 }
