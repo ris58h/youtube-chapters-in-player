@@ -1,64 +1,24 @@
-let currentVideoId = null
 let chapters = null
-let currentChapterIndex = null
 
-setInterval(iteration, 1000)
+main()
 
-function iteration() {
-    const videoId = getVideoId()
-
-    if (!videoId) {
-        console.log("DEBUG: no videoId");
-        return
-    }
-
-    if (videoId === currentVideoId) {
-        if (chapters) {
-            console.log("DEBUG: same videoId and chapters already have been found");
-            const chapterIndex = getCurrentChapterIndex()
-            if (currentChapterIndex !== chapterIndex) {
-                console.log("DEBUG: new chapter index is " + chapterIndex)
-                currentChapterIndex = chapterIndex
-                markChapterAtIndexAsCurrent(currentChapterIndex)
-            }
-            return
-        }
-    } else {
-        console.log("DEBUG: new videoId");
-        currentVideoId = videoId
-        chapters = null
-    }
-
-    // Chapters have been already found
-    if (chapters) {
-        console.log("DEBUG: Chapters have been already found");
-        return
-    }
-
-    try {
-        //TODO: race condition when video has been changed. There are still old chapters. We should wait for new ones.
-        chapters = getChapters()
-        console.log("DEBUG: chapters");
-        console.log(chapters);
-        if (!chapters) {
-            console.log("DEBUG: No chapters were found");
-        } else {
-            if (chapters.length === 0) {
-                console.log("DEBUG: Zero chapters were found");
-            }
-        }
-    } catch (e) {
-        console.error(e)
-        // Stop looking for chapters
-        chapters = null
-    }
-
+onLocationHrefChange(() => {
     removeChaptersElement()
-    //TODO: it's a dirty hack to not show Chapters UI and to prevent a race (new chapters haven't been loaded yet) when getting chapters
-    const chaptersPanelRenderer = document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"]')
-    if (chaptersPanelRenderer) {
-        chaptersPanelRenderer.remove()
+    main()
+})
+
+function main() {
+    const videoId = getVideoId()
+    if (!videoId) {
+        return
     }
+    fetchChapters(videoId)
+        .then(cs => {
+            if (videoId !== getVideoId()) {
+                return
+            }
+            chapters = cs
+        })
 }
 
 document.addEventListener('click', e => {
@@ -74,6 +34,8 @@ document.addEventListener('click', e => {
     if (chapterButton) {
         getOrCreateChaptersElement()
         toggleChaptersElementVisibility()
+
+        e.stopImmediatePropagation()
     } else {
         hideChaptersElement()
     }
@@ -109,6 +71,18 @@ function getOrCreateChaptersElement() {
         const chapterIndex = getCurrentChapterIndex()
         markChapterAtIndexAsCurrent(chapterIndex)
     }
+
+    let currentChapterIndex = null
+    const video = document.querySelector('video')
+    video.addEventListener('timeupdate', () => {
+        const chapterIndex = getCurrentChapterIndex()
+        if (currentChapterIndex !== chapterIndex) {
+            console.log("DEBUG: new chapter index is " + chapterIndex)
+            currentChapterIndex = chapterIndex
+            markChapterAtIndexAsCurrent(currentChapterIndex)
+        }
+    })
+
     return chaptersElement
 }
 
@@ -216,30 +190,10 @@ function adjustChaptersElementSize() {
     chaptersElement.style.height = Math.min(menuHeight, maxHeight) + 'px'
 }
 
-function getChapters() {
-    const chaptersPanelRenderer = document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-macro-markers-description-chapters"]')
-    if (!chaptersPanelRenderer) {
-        return null
-    }
-    const chapterRenderers = chaptersPanelRenderer.querySelectorAll('ytd-macro-markers-list-item-renderer')
-    const chapters = []
-    for (let chapterRenderer of chapterRenderers) {
-        chapters.push(chapterRendererToChapter(chapterRenderer))
-    }
-    return chapters
-}
-
-function chapterRendererToChapter(chapterRenderer) {
-    // const imgScr = chapterRenderer.querySelector('#thumbnail #img').src
-    const text = chapterRenderer.querySelector('#details h4').textContent
-    const timestamp = chapterRenderer.querySelector('#details #time').textContent
-    const time = parseTimestamp(timestamp)
-    return {
-        // imgScr,
-        text,
-        timestamp,
-        time
-    }
+function fetchChapters(videoId) {
+    return new Promise((resolve) => {
+        chrome.runtime.sendMessage({ type: 'fetchChapters', videoId }, resolve)
+    })
 }
 
 function getVideoId() {
@@ -266,16 +220,13 @@ function parseParams(href) {
     return params
 }
 
-function parseTimestamp(ts) {
-    const parts = ts.split(':').reverse()
-    const secs = parseInt(parts[0])
-    if (secs > 59) {
-        return null
-    }
-    const mins = parseInt(parts[1])
-    if (mins > 59) {
-        return null
-    }
-    const hours = parseInt(parts[2]) || 0
-    return secs + (60 * mins) + (60 * 60 * hours)
+function onLocationHrefChange(callback) {
+    let currentHref = document.location.href
+    const observer = new MutationObserver(() => {
+        if (currentHref != document.location.href) {
+            currentHref = document.location.href
+            callback()
+        }
+    })
+    observer.observe(document.querySelector("body"), { childList: true, subtree: true })
 }

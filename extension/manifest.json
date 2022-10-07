@@ -6,17 +6,22 @@
     "version": "0.1.0",
 
     "applications": {
-            "gecko": {
+        "gecko": {
             "id": "youtube-chapters-in-player@ris58h"
         }
+    },
+
+    "background": {
+        "service_worker": "background/background.js",
+        "type": "module"
     },
 
     "content_scripts": [
         {
             "matches": ["https://www.youtube.com/*"],
             "all_frames": true,
-            "js": ["content.js"],
-            "css": ["content.css"]
+            "js": ["content/content.js"],
+            "css": ["content/content.css"]
         }
     ]
 }
