@@ -15,8 +15,7 @@ function iteration() {
     if (videoId === currentVideoId) {
         if (chapters) {
             console.log("DEBUG: same videoId and chapters already have been found");
-            const currentTime = document.querySelector('video').currentTime
-            const chapterIndex = getChapterIndex(chapters, currentTime)
+            const chapterIndex = getCurrentChapterIndex()
             if (currentChapterIndex !== chapterIndex) {
                 console.log("DEBUG: new chapter index is " + chapterIndex)
                 currentChapterIndex = chapterIndex
@@ -107,8 +106,7 @@ function getOrCreateChaptersElement() {
             menuElement.appendChild(toChapterElement(chapter))
         }
 
-        const currentTime = document.querySelector('video').currentTime
-        const chapterIndex = getChapterIndex(chapters, currentTime)
+        const chapterIndex = getCurrentChapterIndex()
         markChapterAtIndexAsCurrent(chapterIndex)
     }
     return chaptersElement
@@ -138,6 +136,11 @@ function toChapterElement(chapter) {
     itemElement.appendChild(contentElement)
 
     return itemElement
+}
+
+function getCurrentChapterIndex() {
+    const currentTime = document.querySelector('video').currentTime
+    return getChapterIndex(chapters, currentTime)
 }
 
 function getChapterIndex(chapters, time) {
