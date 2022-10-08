@@ -23,18 +23,14 @@ function main() {
 
 document.addEventListener('click', e => {
     console.log("DEBUG: click");
-
-    if (!chapters || chapters.length === 0) {
-        console.log("DEBUG: no chapters");
-        return
-    }
-
     const chapterButton = e.target.closest('.ytp-chapter-container')
-
     if (chapterButton) {
+        if (!chapters || chapters.length === 0) {
+            console.log("DEBUG: no chapters");
+            return
+        }
         getOrCreateChaptersElement()
         toggleChaptersElementVisibility()
-
         e.stopImmediatePropagation()
     } else {
         hideChaptersElement()
