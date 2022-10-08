@@ -1,0 +1,33 @@
+// IT'S A HACK TO SUPPORT V2 EXTENSIONS! FOR DEVELOPMENT PURPOSE ONLY!
+{
+    "manifest_version": 2,
+
+    "name": "YouTube Chapters In Player",
+    "description": "Shows YouTube chapters right in the player",
+    "version": "0.1.0",
+
+    "applications": {
+        "gecko": {
+            "id": "youtube-chapters-in-player@ris58h"
+        }
+    },
+
+    "background": {
+        "page": "background-v2.html"
+    },
+    "web_accessible_resources": [
+        "extension/background/youtubei.js"
+    ],
+    "permissions": [
+        "https://www.youtube.com/*"
+    ],
+
+    "content_scripts": [
+        {
+            "matches": ["https://www.youtube.com/*"],
+            "all_frames": true,
+            "js": ["extension/content/content.js"],
+            "css": ["extension/content/content.css"]
+        }
+    ]
+}
