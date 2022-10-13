@@ -12,6 +12,12 @@
         }
     },
 
+    "icons": {
+        "16": "extension/icons/icon16.png",
+        "48": "extension/icons/icon48.png",
+        "128": "extension/icons/icon128.png"
+    },
+
     "background": {
         "page": "background-v2.html"
     },
