@@ -69,8 +69,7 @@ function getOrCreateChaptersElement() {
     }
 
     let currentChapterIndex = null
-    const video = document.querySelector('video')
-    video.addEventListener('timeupdate', () => {
+    getVideo().addEventListener('timeupdate', () => {
         const chapterIndex = getCurrentChapterIndex()
         if (currentChapterIndex !== chapterIndex) {
             console.log("DEBUG: new chapter index is " + chapterIndex)
@@ -86,8 +85,7 @@ function toChapterElement(chapter) {
     const itemElement = document.createElement('div')
     itemElement.classList.add('ytp-menuitem')
     itemElement.addEventListener('click', e => {
-        const video = document.querySelector('video')
-        video.currentTime = chapter.time
+        getVideo().currentTime = chapter.time
         hideChaptersElement()
     })
 
@@ -108,8 +106,12 @@ function toChapterElement(chapter) {
     return itemElement
 }
 
+function getVideo() {
+    return document.querySelector('video:not([data-no-fullscreen])')
+}
+
 function getCurrentChapterIndex() {
-    const currentTime = document.querySelector('video').currentTime
+    const currentTime = getVideo().currentTime
     return getChapterIndex(chapters, currentTime)
 }
 
