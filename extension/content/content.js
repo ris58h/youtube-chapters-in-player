@@ -22,11 +22,9 @@ function main() {
 }
 
 document.addEventListener('click', e => {
-    console.log("DEBUG: click");
     const chapterButton = e.target.closest('.ytp-chapter-container')
     if (chapterButton) {
         if (!chapters || chapters.length === 0) {
-            console.log("DEBUG: no chapters");
             return
         }
         getOrCreateChaptersElement()
@@ -44,7 +42,6 @@ function getChaptersElement() {
 function getOrCreateChaptersElement() {
     let chaptersElement = getChaptersElement()
     if (!chaptersElement) {
-        console.log("DEBUG: create chapters element")
         const container = document.querySelector('#movie_player')
         chaptersElement = document.createElement('div')
         chaptersElement.classList.add('__youtube-chapters-in-player')
@@ -72,7 +69,6 @@ function getOrCreateChaptersElement() {
     getVideo().addEventListener('timeupdate', () => {
         const chapterIndex = getCurrentChapterIndex()
         if (currentChapterIndex !== chapterIndex) {
-            console.log("DEBUG: new chapter index is " + chapterIndex)
             currentChapterIndex = chapterIndex
             markChapterAtIndexAsCurrent(currentChapterIndex)
         }
@@ -125,7 +121,6 @@ function getChapterIndex(chapters, time) {
 }
 
 function markChapterAtIndexAsCurrent(chapterIndex) {
-    console.log("DEBUG: markChapterAsCurrent " + chapterIndex);
     const chaptersElement = getChaptersElement()
     if (!chaptersElement) {
         return
@@ -142,7 +137,6 @@ function markChapterAtIndexAsCurrent(chapterIndex) {
 }
 
 function removeChaptersElement() {
-    console.log("DEBUG: removeChaptersElement");
     let chaptersElement = document.querySelector('.__youtube-chapters-in-player')
     if (chaptersElement) {
         chaptersElement.remove()
