@@ -5,11 +5,17 @@ export async function fetchChapters(videoId) {
     return chaptersFromVideoResponse(videoResponse)
 }
 
+const engagementPanelIds = [
+    'engagement-panel-macro-markers-description-chapters',
+    'engagement-panel-macro-markers-auto-chapters'
+]
+
 function chaptersFromVideoResponse(videoResponse) {
     const result = videoResponse.find(e => e.response).response
-        .engagementPanels.find(e => e.engagementPanelSectionListRenderer && e.engagementPanelSectionListRenderer.panelIdentifier === 'engagement-panel-macro-markers-description-chapters')
+        .engagementPanels.find(e => e.engagementPanelSectionListRenderer && engagementPanelIds.includes(e.engagementPanelSectionListRenderer.panelIdentifier))
         ?.engagementPanelSectionListRenderer.content.macroMarkersListRenderer.contents
-        .map(content => macroMarkersListItemRendererToChapter(content.macroMarkersListItemRenderer))
+        .map(content => content.macroMarkersListItemRenderer ? macroMarkersListItemRendererToChapter(content.macroMarkersListItemRenderer) : null)
+        .filter(e => e ? true : false)
     return result ? result : []
 }
 
