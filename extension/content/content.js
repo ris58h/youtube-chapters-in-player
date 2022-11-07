@@ -1,9 +1,7 @@
-let chapters = null
-
 main()
 
 onLocationHrefChange(() => {
-    removeChaptersElement()
+    removeChaptersControls()
     main()
 })
 
@@ -13,69 +11,111 @@ function main() {
         return
     }
     fetchChapters(videoId)
-        .then(cs => {
+        .then(chapters => {
             if (videoId !== getVideoId()) {
                 return
             }
-            chapters = cs
+            if (chapters && chapters.length > 0) {
+                createChaptersControls(chapters)
+            }
         })
 }
 
 document.addEventListener('click', e => {
-    const chapterButton = e.target.closest('.ytp-chapter-container')
-    if (chapterButton) {
-        if (!chapters || chapters.length === 0) {
-            return
-        }
-        clickOnSettingsIfTheyAreOpened()
-        getOrCreateChaptersElement()
-        toggleChaptersElementVisibility()
-        e.stopImmediatePropagation()
+    const buttons = e.target.closest('.__youtube-chapters-in-player__buttons')
+    if (buttons) {
+        toggleChaptersMenuVisibility()
     } else {
-        hideChaptersElement()
+        hideChaptersMenu()
     }
 }, true)
 
-function getChaptersElement() {
-    return document.querySelector('.__youtube-chapters-in-player')
-}
-
-function getOrCreateChaptersElement() {
-    let chaptersElement = getChaptersElement()
-    if (!chaptersElement) {
-        const container = document.querySelector('#movie_player')
-        chaptersElement = document.createElement('div')
-        chaptersElement.classList.add('__youtube-chapters-in-player')
-        chaptersElement.classList.add('ytp-popup')
-        chaptersElement.style.display = 'none'
-        container.appendChild(chaptersElement)
-
-        const panelElement = document.createElement('div')
-        panelElement.classList.add('ytp-panel')
-        chaptersElement.appendChild(panelElement)
-
-        const menuElement = document.createElement('div')
-        menuElement.classList.add('ytp-panel-menu')
-        panelElement.appendChild(menuElement)
-
-        for (const chapter of chapters) {
-            menuElement.appendChild(toChapterElement(chapter))
-        }
-
-        const chapterIndex = getCurrentChapterIndex()
-        markChapterAtIndexAsCurrent(chapterIndex)
-    }
+function createChaptersControls(chapters) {
+    createChaptersButtons(chapters)
+    createChaptersMenu(chapters)
 
     let currentChapterIndex = null
     getVideo().addEventListener('timeupdate', () => {
-        const chapterIndex = getCurrentChapterIndex()
+        const chapterIndex = getCurrentChapterIndex(chapters)
         if (currentChapterIndex !== chapterIndex) {
             currentChapterIndex = chapterIndex
-            markChapterAtIndexAsCurrent(currentChapterIndex)
+            selectChaptersMenuItemAtIndex(currentChapterIndex)
+            setChaptersMenuButtonText(chapters[currentChapterIndex].title)
         }
     })
+}
 
-    return chaptersElement
+function removeChaptersControls() {
+    removeChaptersButtons()
+    removeChaptersMenu()
+}
+
+function getChaptersButtons() {
+    return document.querySelector('.__youtube-chapters-in-player__buttons')
+}
+
+function createChaptersButtons(chapters) {
+    const chaptersButtons = document.createElement('div')
+    chaptersButtons.classList.add('__youtube-chapters-in-player__buttons')
+    chaptersButtons.classList.add('ytp-chapter-container')
+    document.querySelector('.ytp-left-controls').appendChild(chaptersButtons)
+
+    const dot = document.createElement('span')
+    dot.classList.add('ytp-chapter-title-prefix')
+    dot.setAttribute('aria-hidden', 'true')
+    dot.textContent = '•'
+    chaptersButtons.appendChild(dot)
+
+    const menuButton = document.createElement('button')
+    menuButton.classList.add('ytp-button')
+    menuButton.classList.add('__youtube-chapters-in-player__buttons__menu')
+    menuButton.textContent = chapters[getCurrentChapterIndex(chapters)].title
+    // menuButton.setAttribute('aria-controls', '__youtube-chapters-in-player__menu')
+    // menuButton.setAttribute('aria-expanded', 'false')
+    // menuButton.setAttribute('aria-haspopup', 'true')
+    chaptersButtons.appendChild(menuButton)
+}
+
+function setChaptersMenuButtonText(text) {
+    let chaptersMenuButton = document.querySelector('.__youtube-chapters-in-player__buttons__menu')
+    if (chaptersMenuButton) {
+        chaptersMenuButton.textContent = text
+    }
+}
+
+function removeChaptersButtons() {
+    let chaptersButtons = getChaptersButtons()
+    if (chaptersButtons) {
+        chaptersButtons.remove()
+    }
+}
+
+function getChaptersMenu() {
+    return document.querySelector('.__youtube-chapters-in-player__menu')
+}
+
+function createChaptersMenu(chapters) {
+    const chaptersMenu = document.createElement('div')
+    // chaptersMenu.id = '__youtube-chapters-in-player__menu'
+    chaptersMenu.classList.add('__youtube-chapters-in-player__menu')
+    chaptersMenu.classList.add('ytp-popup')
+    chaptersMenu.style.display = 'none'
+    document.querySelector('#movie_player').appendChild(chaptersMenu)
+
+    const panelElement = document.createElement('div')
+    panelElement.classList.add('ytp-panel')
+    chaptersMenu.appendChild(panelElement)
+
+    const menuElement = document.createElement('div')
+    menuElement.classList.add('ytp-panel-menu')
+    panelElement.appendChild(menuElement)
+
+    for (const chapter of chapters) {
+        menuElement.appendChild(toChapterElement(chapter))
+    }
+
+    const chapterIndex = getCurrentChapterIndex(chapters)
+    selectChaptersMenuItemAtIndex(chapterIndex)
 }
 
 function toChapterElement(chapter) {
@@ -83,7 +123,7 @@ function toChapterElement(chapter) {
     itemElement.classList.add('ytp-menuitem')
     itemElement.addEventListener('click', e => {
         getVideo().currentTime = chapter.time
-        hideChaptersElement()
+        hideChaptersMenu()
     })
 
     const iconElement = document.createElement('div')
@@ -92,7 +132,7 @@ function toChapterElement(chapter) {
 
     const labelElement = document.createElement('div')
     labelElement.classList.add('ytp-menuitem-label')
-    labelElement.textContent = chapter.text
+    labelElement.textContent = chapter.title
     itemElement.appendChild(labelElement)
 
     const contentElement = document.createElement('div')
@@ -103,11 +143,73 @@ function toChapterElement(chapter) {
     return itemElement
 }
 
+function selectChaptersMenuItemAtIndex(chapterIndex) {
+    const chaptersMenu = getChaptersMenu()
+    if (!chaptersMenu) {
+        return
+    }
+    const menuItems = chaptersMenu.querySelectorAll('.ytp-menuitem')
+    for (let i = 0; i < menuItems.length; i++) {
+        const menuItem = menuItems[i]
+        if (i === chapterIndex) {
+            menuItem.setAttribute('aria-checked', 'true')
+        } else {
+            menuItem.removeAttribute('aria-checked')
+        }
+    }
+}
+
+function removeChaptersMenu() {
+    let chaptersMenu = getChaptersMenu()
+    if (chaptersMenu) {
+        chaptersMenu.remove()
+    }
+}
+
+function toggleChaptersMenuVisibility() {
+    if (isChaptersMenuVisible()) {
+        hideChaptersMenu()
+    } else {
+        showChaptersMenu()
+        adjustChaptersMenuSize()
+    }
+}
+
+function isChaptersMenuVisible() {
+    const chaptersMenu = getChaptersMenu()
+    return chaptersMenu && !chaptersMenu.style.display
+}
+
+function showChaptersMenu() {
+    const chaptersMenu = getChaptersMenu()
+    if (chaptersMenu) {
+        chaptersMenu.style.display = ''
+    }
+}
+
+function hideChaptersMenu() {
+    const chaptersMenu = getChaptersMenu()
+    if (chaptersMenu) {
+        chaptersMenu.style.display = 'none'
+    }
+}
+
+function adjustChaptersMenuSize() {
+    const chaptersMenu = getChaptersMenu()
+    if (!chaptersMenu) {
+        return
+    }
+    const menu = chaptersMenu.querySelector('.ytp-panel-menu')
+    const menuHeight = menu.clientHeight
+    const maxHeight = document.querySelector('#movie_player').clientHeight * 0.9
+    chaptersMenu.style.height = Math.min(menuHeight, maxHeight) + 'px'
+}
+
 function getVideo() {
     return document.querySelector('video:not([data-no-fullscreen])')
 }
 
-function getCurrentChapterIndex() {
+function getCurrentChapterIndex(chapters) {
     const currentTime = getVideo().currentTime
     return getChapterIndex(chapters, currentTime)
 }
@@ -119,68 +221,6 @@ function getChapterIndex(chapters, time) {
         }
     }
     return -1
-}
-
-function markChapterAtIndexAsCurrent(chapterIndex) {
-    const chaptersElement = getChaptersElement()
-    if (!chaptersElement) {
-        return
-    }
-    const menuItems = chaptersElement.querySelectorAll('.ytp-menuitem')
-    for (let i = 0; i < menuItems.length; i++) {
-        const menuItem = menuItems[i]
-        if (i === chapterIndex) {
-            menuItem.setAttribute('aria-checked', 'true')
-        } else {
-            menuItem.removeAttribute('aria-checked')
-        }
-    }
-}
-
-function removeChaptersElement() {
-    let chaptersElement = document.querySelector('.__youtube-chapters-in-player')
-    if (chaptersElement) {
-        chaptersElement.remove()
-    }
-}
-
-function toggleChaptersElementVisibility() {
-    if (isChaptersElementVisible()) {
-        hideChaptersElement()
-    } else {
-        showChaptersElement()
-        adjustChaptersElementSize()
-    }
-}
-
-function isChaptersElementVisible() {
-    const chaptersElement = getChaptersElement()
-    return chaptersElement && !chaptersElement.style.display
-}
-
-function showChaptersElement() {
-    const chaptersElement = getChaptersElement()
-    if (chaptersElement) {
-        chaptersElement.style.display = ''
-    }
-}
-
-function hideChaptersElement() {
-    const chaptersElement = getChaptersElement()
-    if (chaptersElement) {
-        chaptersElement.style.display = 'none'
-    }
-}
-
-function adjustChaptersElementSize() {
-    const chaptersElement = getChaptersElement()
-    if (!chaptersElement) {
-        return
-    }
-    const menu = chaptersElement.querySelector('.ytp-panel-menu')
-    const menuHeight = menu.clientHeight
-    const maxHeight = document.querySelector('#movie_player').clientHeight * 0.9
-    chaptersElement.style.height = Math.min(menuHeight, maxHeight) + 'px'
 }
 
 function fetchChapters(videoId) {
@@ -222,11 +262,4 @@ function onLocationHrefChange(callback) {
         }
     })
     observer.observe(document.querySelector("body"), { childList: true, subtree: true })
-}
-
-function clickOnSettingsIfTheyAreOpened() {
-    const openedSettingsButton = document.querySelector('.ytp-settings-button[aria-expanded="true"]')
-    if (openedSettingsButton) {
-        openedSettingsButton.click()
-    }
 }

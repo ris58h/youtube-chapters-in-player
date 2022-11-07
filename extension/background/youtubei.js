@@ -20,11 +20,11 @@ function chaptersFromVideoResponse(videoResponse) {
 }
 
 function macroMarkersListItemRendererToChapter(renderer) {
-    const text = renderer.title.simpleText
+    const title = renderer.title.simpleText
     const timestamp = renderer.timeDescription.simpleText
     const time = parseTimestamp(timestamp)
     return {
-        text,
+        title,
         timestamp,
         time
     }
