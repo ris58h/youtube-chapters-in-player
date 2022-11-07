@@ -40,7 +40,7 @@ function createChaptersControls(chapters) {
         if (currentChapterIndex !== chapterIndex) {
             currentChapterIndex = chapterIndex
             selectChaptersMenuItemAtIndex(currentChapterIndex)
-            setChaptersMenuButtonText(chapters[currentChapterIndex].title)
+            setChaptersMenuButtonText(chapters[currentChapterIndex]?.title)
         }
     })
 }
@@ -69,17 +69,17 @@ function createChaptersButtons(chapters) {
     const menuButton = document.createElement('button')
     menuButton.classList.add('ytp-button')
     menuButton.classList.add('__youtube-chapters-in-player__buttons__menu')
-    menuButton.textContent = chapters[getCurrentChapterIndex(chapters)].title
     // menuButton.setAttribute('aria-controls', '__youtube-chapters-in-player__menu')
     // menuButton.setAttribute('aria-expanded', 'false')
     // menuButton.setAttribute('aria-haspopup', 'true')
     chaptersButtons.appendChild(menuButton)
+    setChaptersMenuButtonText(chapters[getCurrentChapterIndex(chapters)]?.title)
 }
 
 function setChaptersMenuButtonText(text) {
     let chaptersMenuButton = document.querySelector('.__youtube-chapters-in-player__buttons__menu')
     if (chaptersMenuButton) {
-        chaptersMenuButton.textContent = text
+        chaptersMenuButton.textContent = text ? text : 'Chapters'
     }
 }
 
@@ -263,3 +263,72 @@ function onLocationHrefChange(callback) {
     })
     observer.observe(document.querySelector("body"), { childList: true, subtree: true })
 }
+
+/*
+
+time=6
+
+chapters = [
+  {
+    "title": "Ubuntu 22.10 'Kinetic Kudu' GNOME 43's New 'Quick Settings'",
+    "timestamp": "0:19",
+    "time": 19
+  },
+  {
+    "title": "Easier to Change Audio Device",
+    "timestamp": "0:56",
+    "time": 56
+  },
+  {
+    "title": "Nautilus: New Adaptive Design",
+    "timestamp": "1:08",
+    "time": 68
+  },
+  {
+    "title": "Nautilus: Improved List View",
+    "timestamp": "1:25",
+    "time": 85
+  },
+  {
+    "title": "Nautilus: Disks Integration",
+    "timestamp": "1:43",
+    "time": 103
+  },
+  {
+    "title": "Settings App is Now Adaptive",
+    "timestamp": "2:05",
+    "time": 125
+  },
+  {
+    "title": "New 'Ubuntu Desktop' Panel",
+    "timestamp": "2:18",
+    "time": 138
+  },
+  {
+    "title": "WebP Image Support",
+    "timestamp": "2:50",
+    "time": 170
+  },
+  {
+    "title": "Calendar App Sidebar",
+    "timestamp": "3:15",
+    "time": 195
+  },
+  {
+    "title": "New Text Editor App",
+    "timestamp": "3:25",
+    "time": 205
+  },
+  {
+    "title": "PipeWire Default Sound Server",
+    "timestamp": "4:06",
+    "time": 246
+  },
+  {
+    "title": "New Kernel & Graphics Drivers",
+    "timestamp": "4:24",
+    "time": 264
+  }
+]
+
+*/
