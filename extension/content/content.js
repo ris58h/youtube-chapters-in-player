@@ -22,7 +22,7 @@ function main() {
 }
 
 document.addEventListener('click', e => {
-    const buttons = e.target.closest('.__youtube-chapters-in-player__buttons')
+    const buttons = e.target.closest('.__youtube-chapters-in-player__buttons__menu')
     if (buttons) {
         toggleChaptersMenuVisibility()
     } else {
