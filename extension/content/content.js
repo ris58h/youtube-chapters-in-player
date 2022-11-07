@@ -27,6 +27,7 @@ document.addEventListener('click', e => {
         if (!chapters || chapters.length === 0) {
             return
         }
+        clickOnSettingsIfTheyAreOpened()
         getOrCreateChaptersElement()
         toggleChaptersElementVisibility()
         e.stopImmediatePropagation()
@@ -221,4 +222,11 @@ function onLocationHrefChange(callback) {
         }
     })
     observer.observe(document.querySelector("body"), { childList: true, subtree: true })
+}
+
+function clickOnSettingsIfTheyAreOpened() {
+    const openedSettingsButton = document.querySelector('.ytp-settings-button[aria-expanded="true"]')
+    if (openedSettingsButton) {
+        openedSettingsButton.click()
+    }
 }
