@@ -30,24 +30,35 @@ document.addEventListener('click', e => {
     }
 }, true)
 
+let timeupdateListener = null
+
 function createChaptersControls(chapters) {
     createChaptersButtons(chapters)
     createChaptersMenu(chapters)
 
     let currentChapterIndex = null
-    getVideo().addEventListener('timeupdate', () => {
+    timeupdateListener = () => {
         const chapterIndex = getCurrentChapterIndex(chapters)
         if (currentChapterIndex !== chapterIndex) {
             currentChapterIndex = chapterIndex
             selectChaptersMenuItemAtIndex(currentChapterIndex)
             setChaptersMenuButtonText(chapters[currentChapterIndex]?.title)
         }
-    })
+    }
+    getVideo().addEventListener('timeupdate', timeupdateListener)
 }
 
 function removeChaptersControls() {
     removeChaptersButtons()
     removeChaptersMenu()
+
+    if (timeupdateListener) {
+        const video = getVideo()
+        if (video) {
+            video.removeEventListener('timeupdate', timeupdateListener)
+        }
+        timeupdateListener = null
+    }
 }
 
 function getChaptersButtons() {
