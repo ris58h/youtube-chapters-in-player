@@ -133,7 +133,6 @@ function toChapterElement(chapter) {
     itemElement.classList.add('ytp-menuitem')
     itemElement.addEventListener('click', e => {
         getVideo().currentTime = chapter.time
-        hideChaptersMenu()
     })
 
     const iconElement = document.createElement('div')
