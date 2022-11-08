@@ -69,7 +69,7 @@ function createChaptersButtons(chapters) {
     const chaptersButtons = document.createElement('div')
     chaptersButtons.classList.add('__youtube-chapters-in-player__buttons')
     chaptersButtons.classList.add('ytp-chapter-container')
-    document.querySelector('.ytp-left-controls').appendChild(chaptersButtons)
+    document.querySelector('#movie_player .ytp-left-controls').appendChild(chaptersButtons)
 
     const dot = document.createElement('span')
     dot.classList.add('ytp-chapter-title-prefix')
@@ -217,7 +217,7 @@ function adjustChaptersMenuSize() {
 }
 
 function getVideo() {
-    return document.querySelector('video:not([data-no-fullscreen])')
+    return document.querySelector('#movie_player video')
 }
 
 function getCurrentChapterIndex(chapters) {
