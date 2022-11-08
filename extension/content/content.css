@@ -1,8 +1,18 @@
-.ytp-chapter-container:not(.__youtube-chapters-in-player__buttons) {
+.ytp-chapter-container:not(#__youtube-chapters-in-player__buttons) {
     display: none;
 }
 
-.__youtube-chapters-in-player__menu {
+#__youtube-chapters-in-player__buttons {
+    /* TODO: consider to not use .ytp-chapter-container class */
+    /* display: flex; */
+}
+
+#__youtube-chapters-in-player__buttons__menu {
+    /* TODO: width of button should be fixed (or at least has min and max values) */
+    width: initial;
+}
+
+#__youtube-chapters-in-player__menu {
     left: 12px;
     bottom: 61px;
     z-index: 71;
@@ -11,15 +21,15 @@
     max-height: 80%;
 }
 
-.__youtube-chapters-in-player__menu .ytp-panel {
+#__youtube-chapters-in-player__menu .ytp-panel {
     width: 100%;
     height: 100%;
 }
 
-.__youtube-chapters-in-player__menu .ytp-menuitem[aria-checked=true] {
+#__youtube-chapters-in-player__menu .ytp-menuitem[aria-checked=true] {
     background-color: rgba(255, 255, 255, .1)
 }
-.__youtube-chapters-in-player__menu .ytp-menuitem[aria-checked=true] .ytp-menuitem-icon::before {
+#__youtube-chapters-in-player__menu .ytp-menuitem[aria-checked=true] .ytp-menuitem-icon::before {
     content: '•';
     font-weight: bold;
 }

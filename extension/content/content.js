@@ -22,7 +22,7 @@ function main() {
 }
 
 document.addEventListener('click', e => {
-    const buttons = e.target.closest('.__youtube-chapters-in-player__buttons__menu')
+    const buttons = e.target.closest('#__youtube-chapters-in-player__buttons__menu')
     if (buttons) {
         toggleChaptersMenuVisibility()
     } else {
@@ -62,12 +62,12 @@ function removeChaptersControls() {
 }
 
 function getChaptersButtons() {
-    return document.querySelector('.__youtube-chapters-in-player__buttons')
+    return document.querySelector('#__youtube-chapters-in-player__buttons')
 }
 
 function createChaptersButtons(chapters) {
     const chaptersButtons = document.createElement('div')
-    chaptersButtons.classList.add('__youtube-chapters-in-player__buttons')
+    chaptersButtons.id = '__youtube-chapters-in-player__buttons'
     chaptersButtons.classList.add('ytp-chapter-container')
     document.querySelector('#movie_player .ytp-left-controls').appendChild(chaptersButtons)
 
@@ -78,8 +78,8 @@ function createChaptersButtons(chapters) {
     chaptersButtons.appendChild(dot)
 
     const menuButton = document.createElement('button')
+    menuButton.id = '__youtube-chapters-in-player__buttons__menu'
     menuButton.classList.add('ytp-button')
-    menuButton.classList.add('__youtube-chapters-in-player__buttons__menu')
     // menuButton.setAttribute('aria-controls', '__youtube-chapters-in-player__menu')
     // menuButton.setAttribute('aria-expanded', 'false')
     // menuButton.setAttribute('aria-haspopup', 'true')
@@ -88,7 +88,7 @@ function createChaptersButtons(chapters) {
 }
 
 function setChaptersMenuButtonText(text) {
-    let chaptersMenuButton = document.querySelector('.__youtube-chapters-in-player__buttons__menu')
+    let chaptersMenuButton = document.querySelector('#__youtube-chapters-in-player__buttons__menu')
     if (chaptersMenuButton) {
         chaptersMenuButton.textContent = text ? text : 'Chapters'
     }
@@ -102,13 +102,12 @@ function removeChaptersButtons() {
 }
 
 function getChaptersMenu() {
-    return document.querySelector('.__youtube-chapters-in-player__menu')
+    return document.querySelector('#__youtube-chapters-in-player__menu')
 }
 
 function createChaptersMenu(chapters) {
     const chaptersMenu = document.createElement('div')
-    // chaptersMenu.id = '__youtube-chapters-in-player__menu'
-    chaptersMenu.classList.add('__youtube-chapters-in-player__menu')
+    chaptersMenu.id = '__youtube-chapters-in-player__menu'
     chaptersMenu.classList.add('ytp-popup')
     chaptersMenu.style.display = 'none'
     document.querySelector('#movie_player').appendChild(chaptersMenu)
