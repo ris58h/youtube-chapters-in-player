@@ -22,8 +22,8 @@ function main() {
 }
 
 document.addEventListener('click', e => {
-    const buttons = e.target.closest('#__youtube-chapters-in-player__buttons__menu')
-    if (buttons) {
+    const chapterButton = e.target.closest('#__youtube-chapters-in-player__button')
+    if (chapterButton) {
         toggleChaptersMenuVisibility()
     } else {
         hideChaptersMenu()
@@ -33,7 +33,7 @@ document.addEventListener('click', e => {
 let timeupdateListener = null
 
 function createChaptersControls(chapters) {
-    createChaptersButtons(chapters)
+    createChaptersButton(chapters)
     createChaptersMenu(chapters)
 
     let currentChapterIndex = null
@@ -49,7 +49,7 @@ function createChaptersControls(chapters) {
 }
 
 function removeChaptersControls() {
-    removeChaptersButtons()
+    removeChaptersButton()
     removeChaptersMenu()
 
     if (timeupdateListener) {
@@ -61,43 +61,45 @@ function removeChaptersControls() {
     }
 }
 
-function getChaptersButtons() {
-    return document.querySelector('#__youtube-chapters-in-player__buttons')
+function getChaptersButton() {
+    return document.querySelector('#__youtube-chapters-in-player__button')
 }
 
-function createChaptersButtons(chapters) {
-    const chaptersButtons = document.createElement('div')
-    chaptersButtons.id = '__youtube-chapters-in-player__buttons'
-    chaptersButtons.classList.add('ytp-chapter-container')
-    document.querySelector('#movie_player .ytp-left-controls').appendChild(chaptersButtons)
+function createChaptersButton(chapters) {
+    const chaptersContainer = document.createElement('div')
+    chaptersContainer.id = '__youtube-chapters-in-player__button'
+    chaptersContainer.classList.add('ytp-chapter-container')
+    document.querySelector('#movie_player .ytp-left-controls').appendChild(chaptersContainer)
+
+    const button = document.createElement('button')
+    button.classList.add('ytp-button')
+    button.classList.add('ytp-chapter-title')
+    chaptersContainer.appendChild(button)
 
     const dot = document.createElement('span')
     dot.classList.add('ytp-chapter-title-prefix')
     dot.setAttribute('aria-hidden', 'true')
     dot.textContent = '•'
-    chaptersButtons.appendChild(dot)
+    button.appendChild(dot)
 
-    const menuButton = document.createElement('button')
-    menuButton.id = '__youtube-chapters-in-player__buttons__menu'
-    menuButton.classList.add('ytp-button')
-    // menuButton.setAttribute('aria-controls', '__youtube-chapters-in-player__menu')
-    // menuButton.setAttribute('aria-expanded', 'false')
-    // menuButton.setAttribute('aria-haspopup', 'true')
-    chaptersButtons.appendChild(menuButton)
+    const content = document.createElement('div')
+    content.classList.add('ytp-chapter-title-content')
+    button.appendChild(content)
+
     setChaptersMenuButtonText(chapters[getCurrentChapterIndex(chapters)]?.title)
 }
 
 function setChaptersMenuButtonText(text) {
-    let chaptersMenuButton = document.querySelector('#__youtube-chapters-in-player__buttons__menu')
-    if (chaptersMenuButton) {
-        chaptersMenuButton.textContent = text ? text : 'Chapters'
+    let buttonContent = document.querySelector('#__youtube-chapters-in-player__button .ytp-chapter-title-content')
+    if (buttonContent) {
+        buttonContent.textContent = text ? text : 'Chapters'
     }
 }
 
-function removeChaptersButtons() {
-    let chaptersButtons = getChaptersButtons()
-    if (chaptersButtons) {
-        chaptersButtons.remove()
+function removeChaptersButton() {
+    let chaptersButton = getChaptersButton()
+    if (chaptersButton) {
+        chaptersButton.remove()
     }
 }
 

@@ -1,10 +1,5 @@
-.ytp-chapter-container:not(#__youtube-chapters-in-player__buttons) {
+.ytp-chapter-container:not(#__youtube-chapters-in-player__button) {
     display: none;
-}
-
-#__youtube-chapters-in-player__buttons__menu {
-    /* TODO: consider to use original YT layout for chapters */
-    width: initial;
 }
 
 #__youtube-chapters-in-player__menu {
