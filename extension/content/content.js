@@ -243,10 +243,10 @@ function adjustChaptersMenuSize() {
     if (!chaptersMenu) {
         return
     }
-    const menu = chaptersMenu.querySelector('.ytp-panel-menu')
-    const menuHeight = menu.clientHeight
+    const menuHeight = chaptersMenu.querySelector('.ytp-panel-menu').clientHeight
+    const buttonsHeight = chaptersMenu.querySelector('#__youtube-chapters-in-player__menu__buttons').clientHeight
     const maxHeight = document.querySelector('#movie_player').clientHeight * 0.9
-    chaptersMenu.style.height = Math.min(menuHeight, maxHeight) + 'px'
+    chaptersMenu.style.height = Math.min(menuHeight + buttonsHeight, maxHeight) + 'px'
 }
 
 function getVideo() {
