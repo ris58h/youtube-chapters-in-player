@@ -126,6 +126,41 @@ function createChaptersMenu(chapters) {
 
     const chapterIndex = getCurrentChapterIndex(chapters)
     selectChaptersMenuItemAtIndex(chapterIndex)
+
+
+    const buttons = document.createElement('div')
+    buttons.id = '__youtube-chapters-in-player__menu__buttons'
+    chaptersMenu.appendChild(buttons)
+
+    const prevChapterButton = document.createElement('button')
+    prevChapterButton.id = '__youtube-chapters-in-player__menu__buttons__prev'
+    prevChapterButton.classList.add('ytp-button')
+    prevChapterButton.classList.add('ytp-menuitem')
+    prevChapterButton.textContent = '<'
+    prevChapterButton.addEventListener('click', e => {
+        const chapterIndex = getCurrentChapterIndex(chapters)
+        if (chapterIndex <= 0) {
+            return
+        }
+        const chapter = chapters[chapterIndex - 1]
+        getVideo().currentTime = chapter.time
+    })
+    buttons.appendChild(prevChapterButton)
+
+    const nextChapterButton = document.createElement('button')
+    nextChapterButton.id = '__youtube-chapters-in-player__menu__buttons__next'
+    nextChapterButton.classList.add('ytp-button')
+    nextChapterButton.classList.add('ytp-menuitem')
+    nextChapterButton.textContent = '>'
+    nextChapterButton.addEventListener('click', e => {
+        const chapterIndex = getCurrentChapterIndex(chapters)
+        if (chapterIndex >= chapters.length - 1) {
+            return
+        }
+        const chapter = chapters[chapterIndex + 1]
+        getVideo().currentTime = chapter.time
+    })
+    buttons.appendChild(nextChapterButton)
 }
 
 function toChapterElement(chapter) {
