@@ -13,7 +13,7 @@
     z-index: 71;
 
     width: 480px;
-    min-width: 400px;
+    min-width: 250px;
     max-width: calc(100% - 12px - 12px);
     max-height: calc(100% - 12px - 61px);
 
