@@ -40,7 +40,7 @@
 }
 
 #__youtube-chapters-in-player__menu__buttons {
-    border-top: 1px solid rgba(255,255,255,.2);
+    box-shadow: 0 0 0 1px rgba(255,255,255,.2);
 }
 
 #__youtube-chapters-in-player__menu__buttons button {
