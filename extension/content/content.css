@@ -7,7 +7,7 @@
     bottom: 61px;
     z-index: 71;
 
-    width: 50%;
+    width: 480px;
     min-width: 400px;
     max-width: calc(100% - 12px - 12px);
     max-height: calc(100% - 12px - 61px);
@@ -19,6 +19,7 @@
     left: 24px;
     bottom: 70px;
 
+    width: 640px;
     max-width: calc(100% - 24px - 24px);
     max-height: calc(100% - 24px - 70px);
 }
