@@ -2,6 +2,11 @@
     display: none;
 }
 
+.ytp-embed #__youtube-chapters-in-player__button button {
+    width: 100%;
+    cursor: pointer;
+}
+
 #__youtube-chapters-in-player__menu {
     left: 12px;
     bottom: 61px;
