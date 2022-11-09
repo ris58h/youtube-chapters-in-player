@@ -8,10 +8,19 @@
     z-index: 71;
 
     width: 50%;
-    max-height: 80%;
+    min-width: 400px;
+    max-width: calc(100% - 12px - 12px);
+    max-height: calc(100% - 12px - 61px);
 
     display: flex;
     flex-flow: column;
+}
+.ytp-big-mode #__youtube-chapters-in-player__menu {
+    left: 24px;
+    bottom: 70px;
+
+    max-width: calc(100% - 24px - 24px);
+    max-height: calc(100% - 24px - 70px);
 }
 
 #__youtube-chapters-in-player__menu .ytp-panel {
