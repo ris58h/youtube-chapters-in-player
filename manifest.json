@@ -30,7 +30,7 @@
 
     "content_scripts": [
         {
-            "matches": ["https://www.youtube.com/*"],
+            "matches": ["https://www.youtube.com/*", "https://www.youtube-nocookie.com/embed/*"],
             "all_frames": true,
             "js": ["extension/content/content.js"],
             "css": ["extension/content/content.css"]
