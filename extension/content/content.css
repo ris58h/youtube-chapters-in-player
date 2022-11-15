@@ -2,6 +2,10 @@
     display: none;
 }
 
+.ad-showing #__youtube-chapters-in-player__button {
+    display: none;
+}
+
 .ytp-embed #__youtube-chapters-in-player__button button {
     width: 100%;
     cursor: pointer;
