@@ -218,6 +218,7 @@ function toggleChaptersMenuVisibility() {
     } else {
         showChaptersMenu()
         adjustChaptersMenuSize()
+        scrollChaptersMenuToCurrentChapter()
     }
 }
 
@@ -248,6 +249,18 @@ function adjustChaptersMenuSize() {
     const menuHeight = chaptersMenu.querySelector('.ytp-panel-menu').clientHeight
     const buttonsHeight = chaptersMenu.querySelector('#__youtube-chapters-in-player__menu__buttons').clientHeight
     chaptersMenu.style.height = (menuHeight + buttonsHeight) + 'px'
+}
+
+function scrollChaptersMenuToCurrentChapter() {
+    const chaptersMenu = getChaptersMenu()
+    if (!chaptersMenu) {
+        return
+    }
+    const menuItem = chaptersMenu.querySelector('.ytp-menuitem[aria-checked="true"]')
+    if (menuItem && menuItem.offsetParent !== null) {
+        const panel = chaptersMenu.querySelector('.ytp-panel')
+        panel.scrollTop = menuItem.offsetTop
+    }
 }
 
 function getVideo() {
