@@ -41,7 +41,7 @@ async function fetchVideo(videoId) {
     return await response.json()
 }
 
-function parseTimestamp(ts) {
+export function parseTimestamp(ts) {
     const parts = ts.split(':').reverse()
     const secs = parseInt(parts[0])
     if (secs > 59) {
