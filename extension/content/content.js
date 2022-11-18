@@ -27,7 +27,7 @@ async function main() {
     }
     
     if (!chapters) {
-        chapters = await getChaptersViaComments()
+        chapters = await getChaptersViaComments(videoId)
     } 
     
     if (videoId !== getVideoId()) {
