@@ -84,7 +84,7 @@ function isChaptersComment(tsContexts) {
 }
 
 async function fetchComments(videoId) {
-    return await youtubei.fetchComments(videoId)
+    return await fetchComments(videoId)
 }
 
 function newTimeComment(authorAvatar, authorName, tsContext) {
