@@ -169,11 +169,11 @@ function getTimestampContexts(text) {
         if (!tsMatch) {
             return []
         }
-        
+
         const timestamp = tsMatch[1];
         const text = tsMatch[2];
 
-        time = youtubei.parseTimestamp(timestamp)
+        const time = youtubei.parseTimestamp(timestamp)
 
         chapters.push({
             text,
