@@ -18,7 +18,8 @@ async function main() {
         return
     }
     
-    if (!chapters) {
+    if (!chapters || !chapters.length) {
+        console.log('Invoking fetchTimeComments...')
         chapters = await fetchTimeComments(videoId)
         console.log('VIA-COMMENTS :: chapters =', chapters)
     } 

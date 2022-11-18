@@ -59,6 +59,7 @@ function parseTimestamp(ts) {
 
 export async function fetchTimeComments(videoId) {
     const comments = await fetchComments(videoId)
+    console.log('FUNCTION fetchTimeComments :: comments =', comments)
     const timeComments = []
     for (const comment of comments) {
         const tsContexts = getTimestampContexts(comment.text)

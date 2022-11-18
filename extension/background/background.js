@@ -23,6 +23,7 @@ async function fetchChapters(videoId) {
 }
 
 async function fetchTimeComments(videoId) {
+    console.log('function fetchTimeComments')
     return await youtubei.fetchTimeComments(videoId)
 }
 
