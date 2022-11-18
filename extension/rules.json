@@ -8,7 +8,7 @@
     },
     "condition" : {
       "urlFilter": "www.youtube.com",
-      "resourceTypes" : ["xmlhttprequest", "media"]
+      "resourceTypes" : ["xmlhttprequest"]
     }
   }
 ]
