@@ -45,7 +45,7 @@ function setUpWebRequestOriginRemoval() {
         } else {
             // TODO: Add code for Chrome
             chrome.declarativeNetRequest.onRuleMatchedDebug.addListener((rule) => {
-                console.log('Rule matched:', rule);
+                // console.log('Rule matched:', rule);
             });
         }
     });    
