@@ -61,7 +61,7 @@ async function fetchTimeComments(videoId) {
     console.log('FUNCTION fetchTimeComments')
     const comments = await fetchComments(videoId)
     console.log('comments =', comments);
-    const timeComments = []
+    
     for (const comment of comments) {
         const tsContexts = getTimestampContexts(comment.text)
         console.log('tsContexts =', tsContexts);
@@ -70,11 +70,25 @@ async function fetchTimeComments(videoId) {
             continue
         }
         for (const tsContext of tsContexts) {
-            timeComments.push(newTimeComment(comment.authorAvatar, comment.authorName, tsContext))
+            console.log(tsContext);
+            const timeComment = newTimeComment(tsContext)
         }
-    }
-    console.log('timeComments =', timeComments);
-    return timeComments
+    }    
+    
+    // const timeComments = []
+    // for (const comment of comments) {
+    //     const tsContexts = getTimestampContexts(comment.text)
+    //     console.log('tsContexts =', tsContexts);
+
+    //     if (isChaptersComment(tsContexts)) {
+    //         continue
+    //     }
+    //     for (const tsContext of tsContexts) {
+    //         timeComments.push(newTimeComment(comment.authorAvatar, comment.authorName, tsContext))
+    //     }
+    // }
+    // console.log('timeComments =', timeComments);
+    // return timeComments
 }
 
 function isChaptersComment(tsContexts) {
@@ -91,13 +105,21 @@ async function fetchComments(videoId) {
     return await youtubei.fetchComments(videoId)
 }
 
-function newTimeComment(authorAvatar, authorName, tsContext) {
+// function newTimeComment(authorAvatar, authorName, tsContext) {
+//     return {
+//         authorAvatar,
+//         authorName,
+//         timestamp: tsContext.timestamp,
+//         time: tsContext.time,
+//         text: tsContext.text
+//     }
+// }
+
+function newTimeComment({ timestamp, time, text }) {
     return {
-        authorAvatar,
-        authorName,
-        timestamp: tsContext.timestamp,
-        time: tsContext.time,
-        text: tsContext.text
+        timestamp,
+        time,
+        text,
     }
 }
 
