@@ -76,8 +76,9 @@ async function fetchTimeComments(videoId) {
         }
 
         for (const tsContext of tsContexts) {
-            console.log(tsContext);
+            console.log('tsContext =', tsContext);
             const timeComment = newTimeComment(tsContext)
+            console.log('timeComment =', timeComment);
             timeComments.push(timeComment)
         }
 
@@ -102,12 +103,13 @@ async function fetchTimeComments(videoId) {
 }
 
 function isChaptersComment(tsContexts) {
+    console.log('function isChaptersComment :: tsContexts =', tsContexts)
     if (tsContexts.length < 3) {
         return false
     }
-    if (tsContexts[0].time !== 0) {
-        return false
-    }
+    // if (tsContexts[0].time !== 0) { // In some comments, the first timestamp is not zero!
+    //     return false
+    // }
     return true
 }
 
@@ -133,22 +135,70 @@ function newTimeComment({ timestamp, time, text }) {
     }
 }
 
+// function getTimestampContexts(text) {
+//     const result = []
+//     const positions = findTimestamps(text)
+//     for (const position of positions) {
+//         const timestamp = text.substring(position.from, position.to)
+//         const time = youtubei.parseTimestamp(timestamp)
+//         if (time === null) {
+//             continue
+//         }
+//         result.push({
+//             text,
+//             time,
+//             timestamp
+//         })
+//     }
+//     return result
+// }
+
+// const TIMESTAMP_PATTERN = /^(?:(\d?\d):)?(\d?\d):(\d\d)\s(.+)$/
+const TIMESTAMP_PATTERN = /^((?:\d?\d:)?(?:\d?\d:)\d\d)\s(.+)$/
+
 function getTimestampContexts(text) {
-    const result = []
-    const positions = findTimestamps(text)
-    for (const position of positions) {
-        const timestamp = text.substring(position.from, position.to)
-        const time = youtubei.parseTimestamp(timestamp)
-        if (time === null) {
-            continue
+    console.log('function getTimestampContexts')
+    const lines = text.split("\r\n")
+    console.log('lines =', lines)
+
+    const chapters = []
+
+    for (let i = 0; i < lines.length; i++) {
+        const tsMatch = lines[i].match(TIMESTAMP_PATTERN)
+        console.log('i, lines[i], tsMatch =', i, lines[i], tsMatch)
+        if (!tsMatch) {
+            return []
         }
-        result.push({
+        
+        const timestamp = tsMatch[1];
+        const text = tsMatch[2];
+
+        time = youtubei.parseTimestamp(timestamp)
+
+        chapters.push({
             text,
             time,
-            timestamp
+            timestamp,
         })
     }
-    return result
+
+    return chapters
+
+    // const result = []
+    // const positions = findTimestamps(text)
+    // for (const position of positions) {
+    //     const timestamp = text.substring(position.from, position.to)
+    //     const time = youtubei.parseTimestamp(timestamp)
+    //     if (time === null) {
+    //         continue
+    //     }
+    //     result.push({
+    //         text,
+    //         time,
+    //         timestamp
+    //     })
+    // }
+    // return result
 }
 
 function findTimestamps(text) {
