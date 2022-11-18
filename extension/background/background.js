@@ -10,14 +10,48 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return true
     }
     if (request.type == 'fetchTimeComments') {
-        fetchTimeComments(request.videoId)
+        setUpWebRequestModification()
+
+        setTimeout(() => {
+            fetchTimeComments(request.videoId)
             .then(sendResponse)
             .catch(e => {
                 console.error(e)
             })
+        }, 200)
+
         return true
     }
 })
+
+function setUpWebRequestOriginRemoval() {
+    console.log('FUNCTION setUpWebRequestOriginRemoval')
+
+    chrome.permissions.contains({ 
+        permissions: ['webRequestBlocking'],
+        origins: ['https://www.youtube.com/']
+    }, (permissionExists) => {
+        if (permissionExists) {
+            // YouTube declines requests with wrong Origin.
+            // We have to remove the Origin header which is added automatically by the browser.
+            chrome.webRequest.onBeforeSendHeaders.addListener(
+                details => {
+                    const newRequestHeaders = details.requestHeaders.filter(header => {
+                        return header.name.toLowerCase() !== "origin"
+                    })
+                    return {requestHeaders: newRequestHeaders}
+                },
+                {urls: ["https://www.youtube.com/*"]},
+                ["blocking", "requestHeaders", chrome.webRequest.OnBeforeSendHeadersOptions.EXTRA_HEADERS].filter(Boolean)
+            )
+        } else {
+            // TODO: Add code for Chrome
+            chrome.declarativeNetRequest.onRuleMatchedDebug.addListener((rule) => {
+                console.log('Rule matched:', rule);
+            });
+        }
+    });    
+}
 
 async function fetchChapters(videoId) {
     return await youtubei.fetchChapters(videoId)
