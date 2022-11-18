@@ -1,4 +1,4 @@
-fetchmain()
+main()
 
 onLocationHrefChange(() => {
     removeChaptersControls()
