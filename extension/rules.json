@@ -7,7 +7,7 @@
       "requestHeaders": [{ "header": "origin", "operation": "remove" }]
     },
     "condition" : {
-      "urlFilter": "https://www.youtube.com",
+      "urlFilter": "www.youtube.com",
       "resourceTypes" : ["xmlhttprequest"]
     }
   }
