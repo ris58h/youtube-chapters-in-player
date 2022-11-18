@@ -5,20 +5,38 @@ onLocationHrefChange(() => {
     main()
 })
 
-function main() {
+async function main() {
     const videoId = getVideoId()
     if (!videoId) {
         return
     }
-    fetchChapters(videoId)
-        .then(chapters => {
-            if (videoId !== getVideoId()) {
-                return
-            }
-            if (chapters && chapters.length > 0) {
-                createChaptersControls(chapters)
-            }
-        })
+    // fetchChapters(videoId)
+    //     .then(chapters => {
+    //         if (videoId !== getVideoId()) {
+    //             return
+    //         }
+    //         if (chapters && chapters.length > 0) {
+    //             createChaptersControls(chapters)
+    //         }
+    //     })
+
+    let chapters = await fetchChapters(videoId);
+
+    if (videoId !== getVideoId()) {
+        return
+    }
+    
+    if (!chapters) {
+        chapters = await getChaptersViaComments()
+    } 
+    
+    if (videoId !== getVideoId()) {
+        return
+    }
+    
+    if (chapters && chapters.length > 0) {
+        createChaptersControls(chapters)
+    }
 }
 
 document.addEventListener('click', e => {
@@ -284,6 +302,12 @@ function getChapterIndex(chapters, time) {
 function fetchChapters(videoId) {
     return new Promise((resolve) => {
         chrome.runtime.sendMessage({ type: 'fetchChapters', videoId }, resolve)
+    })
+}
+
+function getChaptersViaComments(videoId) {
+    return new Promise((resolve) => {
+        chrome.runtime.sendMessage({ type: 'getChaptersViaComments', videoId }, resolve)
     })
 }
 
