@@ -61,18 +61,28 @@ async function fetchTimeComments(videoId) {
     console.log('FUNCTION fetchTimeComments')
     const comments = await fetchComments(videoId)
     console.log('comments =', comments);
-    
-    for (const comment of comments) {
-        const tsContexts = getTimestampContexts(comment.text)
-        console.log('tsContexts =', tsContexts);
 
-        if (isChaptersComment(tsContexts)) {
+    const timeComments = []
+    // let timeComment = null;    
+    
+    // Let's take only the furst minimally suitable comment.
+    // Later on, maybe implement more sophisticated comment filtering.
+    for (let i = 0; i < comments.length; i++) {
+        const tsContexts = getTimestampContexts(comments[i].text)
+        console.log('i, tsContexts =', i, tsContexts);
+
+        if (!isChaptersComment(tsContexts)) {
             continue
         }
+
         for (const tsContext of tsContexts) {
             console.log(tsContext);
             const timeComment = newTimeComment(tsContext)
+            timeComments.push(timeComment)
         }
+
+        console.log('timeComments =', timeComments)
+        return timeComments
     }    
     
     // const timeComments = []
