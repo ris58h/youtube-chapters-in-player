@@ -79,6 +79,9 @@ chrome.permissions.contains({
         )
     } else {
         // TODO: Add code for Chrome
+        chrome.declarativeNetRequest.onRuleMatchedDebug.addListener((rule) => {
+            console.log('Rule matched:', rule);
+        });
     }
 });
 
