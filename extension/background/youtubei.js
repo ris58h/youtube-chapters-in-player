@@ -75,7 +75,6 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 
 const INNERTUBE_API_KEY = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
 const INNERTUBE_CLIENT_NAME = "WEB"
-const INNERTUBE_CLIENT_VERSION = "2.20211129.09.00"
 
 export async function fetchComments(videoId) {
     const videoResponse = await fetchVideo(videoId)
