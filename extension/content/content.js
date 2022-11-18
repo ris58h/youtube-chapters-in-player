@@ -1,4 +1,4 @@
-main()
+fetchmain()
 
 onLocationHrefChange(() => {
     removeChaptersControls()
@@ -10,17 +10,9 @@ async function main() {
     if (!videoId) {
         return
     }
-    // fetchChapters(videoId)
-    //     .then(chapters => {
-    //         if (videoId !== getVideoId()) {
-    //             return
-    //         }
-    //         if (chapters && chapters.length > 0) {
-    //             createChaptersControls(chapters)
-    //         }
-    //     })
 
     let chapters = await fetchChapters(videoId);
+    console.log('BUILT-IN :: chapters =', chapters);
 
     if (videoId !== getVideoId()) {
         return
@@ -28,6 +20,7 @@ async function main() {
     
     if (!chapters) {
         chapters = await fetchTimeComments(videoId)
+        console.log('VIA-COMMENTS :: chapters =', chapters)
     } 
     
     if (videoId !== getVideoId()) {
