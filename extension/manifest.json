@@ -17,6 +17,8 @@
         "declarativeNetRequestFeedback"        
     ],
 
+    "host_permissions": ["https://www.youtube.com/"],
+
     "declarative_net_request": {
         "rule_resources": [
             {
