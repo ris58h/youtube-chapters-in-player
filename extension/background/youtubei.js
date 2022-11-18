@@ -124,17 +124,6 @@ function commentsContinuationToken(videoResponse) {
         ?.continuationEndpoint.continuationCommand.token
 }
 
-async function fetchVideo(videoId) {
-    const response = await fetch(`https://www.youtube.com/watch?v=${videoId}&pbj=1`, {
-        credentials: "omit",
-        headers: {
-            "X-Youtube-Client-Name": "1",
-            "X-Youtube-Client-Version": INNERTUBE_CLIENT_VERSION
-        }
-    })
-    return await response.json()
-}
-
 async function fetchNext(continuation) {
     const body = {
         context: {
