@@ -13,7 +13,8 @@
 
     "permissions": [
         "https://www.youtube.com/*",
-        "webRequest"
+        "webRequest",
+        "webRequestBlocking"
     ],
 
     "icons": {

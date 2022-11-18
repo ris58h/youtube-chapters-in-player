@@ -26,7 +26,8 @@
     ],
     "permissions": [
         "https://www.youtube.com/*",
-        "webRequest"
+        "webRequest",
+        "webRequestBlocking"
     ],   
 
     "content_scripts": [
