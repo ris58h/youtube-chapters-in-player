@@ -26,11 +26,6 @@ async function fetchChapters(videoId) {
 // time-comments related code below
 
 async function fetchTimeComments(videoId) {
-    console.log('function fetchTimeComments')
-    return await youtubei.fetchTimeComments(videoId)
-}
-
-async function fetchTimeComments(videoId) {
     const comments = await fetchComments(videoId)
     const timeComments = []
     for (const comment of comments) {
