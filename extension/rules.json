@@ -8,7 +8,7 @@
     },
     "condition" : {
       "urlFilter": ["https://www.youtube.com"],
-      "resourceTypes" : ["main_frame"]
+      "resourceTypes" : ["xmlhttprequest"]
     }
   }
 ]
