@@ -62,9 +62,6 @@ async function fetchTimeComments(videoId) {
     const comments = await fetchComments(videoId)
     console.log('comments =', comments);
 
-    const timeComments = []
-    // let timeComment = null;    
-    
     // Let's take only the furst minimally suitable comment.
     // Later on, maybe implement more sophisticated comment filtering.
     for (let i = 0; i < comments.length; i++) {
@@ -89,6 +86,8 @@ async function fetchTimeComments(videoId) {
         // console.log('timeComments =', timeComments)
         // return timeComments
     }    
+
+    return []
     
     // const timeComments = []
     // for (const comment of comments) {
