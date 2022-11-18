@@ -1,5 +1,7 @@
 import * as youtubei from './youtubei.js'
 
+setUpWebRequestOriginRemoval()
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type == 'fetchChapters') {
         fetchChapters(request.videoId)
@@ -10,16 +12,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return true
     }
     if (request.type == 'fetchTimeComments') {
-        setUpWebRequestOriginRemoval()
-
-        setTimeout(() => {
-            fetchTimeComments(request.videoId)
+        fetchTimeComments(request.videoId)
             .then(sendResponse)
             .catch(e => {
                 console.error(e)
             })
-        }, 200)
-
         return true
     }
 })
