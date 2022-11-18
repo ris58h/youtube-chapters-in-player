@@ -71,19 +71,23 @@ async function fetchTimeComments(videoId) {
         const tsContexts = getTimestampContexts(comments[i].text)
         console.log('i, tsContexts =', i, tsContexts);
 
-        if (!isChaptersComment(tsContexts)) {
-            continue
+        if (tsContexts.length) {
+            return tsContexts
         }
 
-        for (const tsContext of tsContexts) {
-            console.log('tsContext =', tsContext);
-            const timeComment = newTimeComment(tsContext)
-            console.log('timeComment =', timeComment);
-            timeComments.push(timeComment)
-        }
+        // if (!isChaptersComment(tsContexts)) {
+        //     continue
+        // }
 
-        console.log('timeComments =', timeComments)
-        return timeComments
+        // for (const tsContext of tsContexts) {
+        //     console.log('tsContext =', tsContext);
+        //     const timeComment = newTimeComment(tsContext)
+        //     console.log('timeComment =', timeComment);
+        //     timeComments.push(timeComment)
+        // }
+
+        // console.log('timeComments =', timeComments)
+        // return timeComments
     }    
     
     // const timeComments = []
