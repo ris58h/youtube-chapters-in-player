@@ -42,12 +42,11 @@ function setUpWebRequestOriginRemoval() {
                 {urls: ["https://www.youtube.com/*"]},
                 ["blocking", "requestHeaders", chrome.webRequest.OnBeforeSendHeadersOptions.EXTRA_HEADERS].filter(Boolean)
             )
-        } else {
-            // TODO: Add code for Chrome
+        } /* else {
             chrome.declarativeNetRequest.onRuleMatchedDebug.addListener((rule) => {
                 // console.log('Rule matched:', rule);
             });
-        }
+        } */
     });    
 }
 
@@ -71,92 +70,15 @@ async function fetchTimeComments(videoId) {
         if (tsContexts.length) {
             return tsContexts
         }
-
-        // if (!isChaptersComment(tsContexts)) {
-        //     continue
-        // }
-
-        // for (const tsContext of tsContexts) {
-        //     console.log('tsContext =', tsContext);
-        //     const timeComment = newTimeComment(tsContext)
-        //     console.log('timeComment =', timeComment);
-        //     timeComments.push(timeComment)
-        // }
-
-        // console.log('timeComments =', timeComments)
-        // return timeComments
     }    
 
     return []
-    
-    // const timeComments = []
-    // for (const comment of comments) {
-    //     const tsContexts = getTimestampContexts(comment.text)
-    //     console.log('tsContexts =', tsContexts);
-
-    //     if (isChaptersComment(tsContexts)) {
-    //         continue
-    //     }
-    //     for (const tsContext of tsContexts) {
-    //         timeComments.push(newTimeComment(comment.authorAvatar, comment.authorName, tsContext))
-    //     }
-    // }
-    // console.log('timeComments =', timeComments);
-    // return timeComments
-}
-
-function isChaptersComment(tsContexts) {
-    console.log('function isChaptersComment :: tsContexts =', tsContexts)
-    if (tsContexts.length < 3) {
-        return false
-    }
-    // if (tsContexts[0].time !== 0) { // In some comments, the first timestamp is not zero!
-    //     return false
-    // }
-    return true
 }
 
 async function fetchComments(videoId) {
     return await youtubei.fetchComments(videoId)
 }
 
-// function newTimeComment(authorAvatar, authorName, tsContext) {
-//     return {
-//         authorAvatar,
-//         authorName,
-//         timestamp: tsContext.timestamp,
-//         time: tsContext.time,
-//         text: tsContext.text
-//     }
-// }
-
-function newTimeComment({ timestamp, time, text }) {
-    return {
-        timestamp,
-        time,
-        text,
-    }
-}
-
-// function getTimestampContexts(text) {
-//     const result = []
-//     const positions = findTimestamps(text)
-//     for (const position of positions) {
-//         const timestamp = text.substring(position.from, position.to)
-//         const time = youtubei.parseTimestamp(timestamp)
-//         if (time === null) {
-//             continue
-//         }
-//         result.push({
-//             text,
-//             time,
-//             timestamp
-//         })
-//     }
-//     return result
-// }
-
-// const TIMESTAMP_PATTERN = /^(?:(\d?\d):)?(\d?\d):(\d\d)\s(.+)$/
 const TIMESTAMP_PATTERN = /^((?:\d?\d:)?(?:\d?\d:)\d\d)\s(.+)$/
 
 function getTimestampContexts(text) {
@@ -186,34 +108,4 @@ function getTimestampContexts(text) {
     }
 
     return chapters
-
-    // const result = []
-    // const positions = findTimestamps(text)
-    // for (const position of positions) {
-    //     const timestamp = text.substring(position.from, position.to)
-    //     const time = youtubei.parseTimestamp(timestamp)
-    //     if (time === null) {
-    //         continue
-    //     }
-    //     result.push({
-    //         text,
-    //         time,
-    //         timestamp
-    //     })
-    // }
-    // return result
 }
-
-function findTimestamps(text) {
-    const result = []
-    const timestampPattern = /(\d?\d:)?(\d?\d:)\d\d/g
-    let match
-    while ((match = timestampPattern.exec(text))) {
-        result.push({
-            from: match.index,
-            to: timestampPattern.lastIndex
-        })
-    }
-    return result
-}
-
