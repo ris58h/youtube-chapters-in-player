@@ -60,18 +60,27 @@ function parseTimestamp(ts) {
 const MAX_COMMENT_PAGES = 5
 const MAX_COMMENTS = 100
 
-// YouTube declines requests with wrong Origin.
-// We have to remove the Origin header which is added automatically by the browser.
-chrome.webRequest.onBeforeSendHeaders.addListener(
-    details => {
-        const newRequestHeaders = details.requestHeaders.filter(header => {
-            return header.name.toLowerCase() !== "origin"
-        })
-        return {requestHeaders: newRequestHeaders}
-    },
-    {urls: ["https://www.youtube.com/*"]},
-    ["blocking", "requestHeaders", chrome.webRequest.OnBeforeSendHeadersOptions.EXTRA_HEADERS].filter(Boolean)
-)
+chrome.permissions.contains({ 
+    permissions: ['webRequestBlocking'],
+    origins: ['https://www.youtube.com/']
+}, (permissionExists) => {
+    if (permissionExists) {
+        // YouTube declines requests with wrong Origin.
+        // We have to remove the Origin header which is added automatically by the browser.
+        chrome.webRequest.onBeforeSendHeaders.addListener(
+            details => {
+                const newRequestHeaders = details.requestHeaders.filter(header => {
+                    return header.name.toLowerCase() !== "origin"
+                })
+                return {requestHeaders: newRequestHeaders}
+            },
+            {urls: ["https://www.youtube.com/*"]},
+            ["blocking", "requestHeaders", chrome.webRequest.OnBeforeSendHeadersOptions.EXTRA_HEADERS].filter(Boolean)
+        )
+    } else {
+        // TODO: Add code for Chrome
+    }
+});
 
 const INNERTUBE_API_KEY = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
 const INNERTUBE_CLIENT_NAME = "WEB"
