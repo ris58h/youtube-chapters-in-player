@@ -31,6 +31,7 @@ function setUpWebRequestOriginRemoval() {
         permissions: ['webRequestBlocking'],
         origins: ['https://www.youtube.com/']
     }, (permissionExists) => {
+        console.log('permissionExists =', permissionExists);
         if (permissionExists) {
             // YouTube declines requests with wrong Origin.
             // We have to remove the Origin header which is added automatically by the browser.
@@ -60,10 +61,13 @@ async function fetchChapters(videoId) {
 // time-comments related code below
 
 async function fetchTimeComments(videoId) {
+    console.log('FUNCTION fetchTimeComments')
     const comments = await fetchComments(videoId)
     const timeComments = []
     for (const comment of comments) {
         const tsContexts = getTimestampContexts(comment.text)
+        console.log('tsContexts =', tsContexts);
+
         if (isChaptersComment(tsContexts)) {
             continue
         }
@@ -71,6 +75,7 @@ async function fetchTimeComments(videoId) {
             timeComments.push(newTimeComment(comment.authorAvatar, comment.authorName, tsContext))
         }
     }
+    console.log('timeComments =', timeComments);
     return timeComments
 }
 
