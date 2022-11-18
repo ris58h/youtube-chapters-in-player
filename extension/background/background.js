@@ -63,6 +63,7 @@ async function fetchChapters(videoId) {
 async function fetchTimeComments(videoId) {
     console.log('FUNCTION fetchTimeComments')
     const comments = await fetchComments(videoId)
+    console.log('comments =', comments);
     const timeComments = []
     for (const comment of comments) {
         const tsContexts = getTimestampContexts(comment.text)
