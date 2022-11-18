@@ -10,7 +10,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return true
     }
     if (request.type == 'fetchTimeComments') {
-        setUpWebRequestModification()
+        setUpWebRequestOriginRemoval()
 
         setTimeout(() => {
             fetchTimeComments(request.videoId)
