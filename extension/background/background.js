@@ -8,8 +8,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 console.error(e)
             })
         return true
-    } else if (request.type == 'getChaptersViaComments') {
-        getChaptersViaComments(request.videoId)
+    } else if (request.type == 'fetchTimeComments') {
+        fetchTimeComments(request.videoId)
             .then(sendResponse)
             .catch(e => {
                 console.error(e)
@@ -22,7 +22,7 @@ async function fetchChapters(videoId) {
     return await youtubei.fetchChapters(videoId)
 }
 
-async function getChaptersViaComments(videoId) {
-    return await youtubei.getChaptersViaComments(videoId)
+async function fetchTimeComments(videoId) {
+    return await youtubei.fetchTimeComments(videoId)
 }
 

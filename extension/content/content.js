@@ -27,7 +27,7 @@ async function main() {
     }
     
     if (!chapters) {
-        chapters = await getChaptersViaComments(videoId)
+        chapters = await fetchTimeComments(videoId)
     } 
     
     if (videoId !== getVideoId()) {
@@ -305,9 +305,9 @@ function fetchChapters(videoId) {
     })
 }
 
-function getChaptersViaComments(videoId) {
+function fetchTimeComments(videoId) {
     return new Promise((resolve) => {
-        chrome.runtime.sendMessage({ type: 'getChaptersViaComments', videoId }, resolve)
+        chrome.runtime.sendMessage({ type: 'fetchTimeComments', videoId }, resolve)
     })
 }
 
