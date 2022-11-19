@@ -22,13 +22,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 })
 
 function setUpWebRequestOriginRemoval() {
-    console.log('FUNCTION setUpWebRequestOriginRemoval')
+    // console.log('FUNCTION setUpWebRequestOriginRemoval')
 
     chrome.permissions.contains({ 
         permissions: ['webRequestBlocking'],
         origins: ['https://www.youtube.com/']
     }, (permissionExists) => {
-        console.log('permissionExists =', permissionExists)
+        // console.log('permissionExists =', permissionExists)
         if (permissionExists) {
             // YouTube declines requests with wrong Origin.
             // We have to remove the Origin header which is added automatically by the browser.
@@ -57,15 +57,15 @@ async function fetchChapters(videoId) {
 // time-comments related code below
 
 async function fetchTimeComments(videoId) {
-    console.log('FUNCTION fetchTimeComments')
+    // console.log('FUNCTION fetchTimeComments')
     const comments = await fetchComments(videoId)
-    console.log('comments =', comments)
+    // console.log('comments =', comments)
 
     // Let's take only the furst minimally suitable comment.
     // Later on, maybe implement more sophisticated comment filtering.
     for (let i = 0; i < comments.length; i++) {
         const tsContexts = getTimestampContexts(comments[i].text)
-        console.log('i, tsContexts =', i, tsContexts)
+        // console.log('i, tsContexts =', i, tsContexts)
 
         if (tsContexts.length) {
             return tsContexts
@@ -82,15 +82,15 @@ async function fetchComments(videoId) {
 const TIMESTAMP_PATTERN = /^((?:\d?\d:)?(?:\d?\d:)\d\d)\s(.+)$/
 
 function getTimestampContexts(text) {
-    console.log('function getTimestampContexts')
+    // console.log('function getTimestampContexts')
     const lines = text.split("\r\n")
-    console.log('lines =', lines)
+    // console.log('lines =', lines)
 
     const chapters = []
 
     for (let i = 0; i < lines.length; i++) {
         const tsMatch = lines[i].match(TIMESTAMP_PATTERN)
-        console.log('i, lines[i], tsMatch =', i, lines[i], tsMatch)
+        // console.log('i, lines[i], tsMatch =', i, lines[i], tsMatch)
         if (!tsMatch) {
             return []
         }

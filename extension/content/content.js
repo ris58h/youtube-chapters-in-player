@@ -12,16 +12,16 @@ async function main() {
     }
 
     let chapters = await fetchChapters(videoId)
-    console.log('BUILT-IN :: chapters =', chapters)
+    // console.log('BUILT-IN :: chapters =', chapters)
 
     if (videoId !== getVideoId()) {
         return
     }
     
     if (!chapters || !chapters.length) {
-        console.log('Invoking fetchTimeComments...')
+        // console.log('Invoking fetchTimeComments...')
         chapters = await fetchTimeComments(videoId)
-        console.log('VIA-COMMENTS :: chapters =', chapters)
+        // console.log('VIA-COMMENTS :: chapters =', chapters)
     } 
     
     if (videoId !== getVideoId()) {
