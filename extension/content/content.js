@@ -11,8 +11,8 @@ async function main() {
         return
     }
 
-    let chapters = await fetchChapters(videoId);
-    console.log('BUILT-IN :: chapters =', chapters);
+    let chapters = await fetchChapters(videoId)
+    console.log('BUILT-IN :: chapters =', chapters)
 
     if (videoId !== getVideoId()) {
         return

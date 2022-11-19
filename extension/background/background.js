@@ -28,7 +28,7 @@ function setUpWebRequestOriginRemoval() {
         permissions: ['webRequestBlocking'],
         origins: ['https://www.youtube.com/']
     }, (permissionExists) => {
-        console.log('permissionExists =', permissionExists);
+        console.log('permissionExists =', permissionExists)
         if (permissionExists) {
             // YouTube declines requests with wrong Origin.
             // We have to remove the Origin header which is added automatically by the browser.
@@ -44,10 +44,10 @@ function setUpWebRequestOriginRemoval() {
             )
         } /* else {
             chrome.declarativeNetRequest.onRuleMatchedDebug.addListener((rule) => {
-                // console.log('Rule matched:', rule);
-            });
+                // console.log('Rule matched:', rule)
+            })
         } */
-    });    
+    })    
 }
 
 async function fetchChapters(videoId) {
@@ -59,13 +59,13 @@ async function fetchChapters(videoId) {
 async function fetchTimeComments(videoId) {
     console.log('FUNCTION fetchTimeComments')
     const comments = await fetchComments(videoId)
-    console.log('comments =', comments);
+    console.log('comments =', comments)
 
     // Let's take only the furst minimally suitable comment.
     // Later on, maybe implement more sophisticated comment filtering.
     for (let i = 0; i < comments.length; i++) {
         const tsContexts = getTimestampContexts(comments[i].text)
-        console.log('i, tsContexts =', i, tsContexts);
+        console.log('i, tsContexts =', i, tsContexts)
 
         if (tsContexts.length) {
             return tsContexts
@@ -95,8 +95,8 @@ function getTimestampContexts(text) {
             return []
         }
 
-        const timestamp = tsMatch[1];
-        const title = tsMatch[2];
+        const timestamp = tsMatch[1]
+        const title = tsMatch[2]
 
         const time = youtubei.parseTimestamp(timestamp)
 
