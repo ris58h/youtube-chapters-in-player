@@ -138,8 +138,8 @@ async function fetchNext(continuation) {
 
     // console.log('response =', response)
 
-    const responseObj = await response.json()
+    // const responseObj = await response.json()
     // console.log('responseObj =', responseObj)
-    // return await response.json()
-    return responseObj
+    return await response.json()
+    // return responseObj
 }
