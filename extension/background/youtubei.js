@@ -64,12 +64,9 @@ const INNERTUBE_API_KEY = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
 const INNERTUBE_CLIENT_NAME = "WEB"
 
 export async function fetchComments(videoId) {
-    // console.log('FUNCTION fetchComments')
     const videoResponse = await fetchVideo(videoId)
-    // console.log('videoResponse =', videoResponse)
 
     let token = commentsContinuationToken(videoResponse)
-    // console.log('token =', token)
     if (!token) {
         return []
     }
@@ -78,7 +75,6 @@ export async function fetchComments(videoId) {
     let pageCount = 0
     while (prevToken !== token && pageCount < MAX_COMMENT_PAGES && comments.length < MAX_COMMENTS) {
         const commentsResponse = await fetchNext(token)
-        // console.log('commentsResponse =', commentsResponse)
 
         prevToken = token
         const items = pageCount === 0
@@ -136,10 +132,5 @@ async function fetchNext(continuation) {
         body: JSON.stringify(body)
     })
 
-    // console.log('response =', response)
-
-    // const responseObj = await response.json()
-    // console.log('responseObj =', responseObj)
     return await response.json()
-    // return responseObj
 }

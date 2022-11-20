@@ -22,13 +22,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 })
 
 function setUpWebRequestOriginRemoval() {
-    // console.log('FUNCTION setUpWebRequestOriginRemoval')
-
     chrome.permissions.contains({ 
         permissions: ['webRequestBlocking'],
         origins: ['https://www.youtube.com/']
     }, (permissionExists) => {
-        // console.log('permissionExists =', permissionExists)
         if (permissionExists) {
             // YouTube declines requests with wrong Origin.
             // We have to remove the Origin header which is added automatically by the browser.
@@ -42,11 +39,7 @@ function setUpWebRequestOriginRemoval() {
                 {urls: ["https://www.youtube.com/*"]},
                 ["blocking", "requestHeaders", chrome.webRequest.OnBeforeSendHeadersOptions.EXTRA_HEADERS].filter(Boolean)
             )
-        } /* else {
-            chrome.declarativeNetRequest.onRuleMatchedDebug.addListener((rule) => {
-                // console.log('Rule matched:', rule)
-            })
-        } */
+        } // Otherwise Origin is removed via declarative net request
     })    
 }
 
@@ -57,16 +50,12 @@ async function fetchChapters(videoId) {
 // time-comments related code below
 
 async function fetchTimeComments(videoId) {
-    // console.log('FUNCTION fetchTimeComments')
     const comments = await fetchComments(videoId)
-    // console.log('comments =', comments)
 
-    // Let's take only the first minimally suitable comment.
-    // Later on, maybe implement more sophisticated comment filtering.
+    // Currently using only the first minimally suitable comment.
+    // Maybe later implement more sophisticated comment selection.
     for (let i = 0; i < comments.length; i++) {
         const tsContexts = getTimestampContexts(comments[i].text)
-        // console.log('i, tsContexts =', i, tsContexts)
-
         if (tsContexts.length) {
             return tsContexts
         }
@@ -80,16 +69,12 @@ async function fetchComments(videoId) {
 }
 
 function getTimestampContexts(text) {
-    // console.log('function getTimestampContexts')
-    const lines = text.split("\r\n")
-    // console.log('lines =', lines)
-
     const TIMESTAMP_PATTERN = /^((?:\d?\d:)?(?:\d?\d:)\d\d)\s(.+)$/
     const chapters = []
+    const lines = text.split("\r\n")
 
     for (let i = 0; i < lines.length; i++) {
         const tsMatch = lines[i].match(TIMESTAMP_PATTERN)
-        // console.log('i, lines[i], tsMatch =', i, lines[i], tsMatch)
         if (!tsMatch) {
             return []
         }
