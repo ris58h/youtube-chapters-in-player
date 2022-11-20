@@ -61,7 +61,7 @@ async function fetchTimeComments(videoId) {
     const comments = await fetchComments(videoId)
     // console.log('comments =', comments)
 
-    // Let's take only the furst minimally suitable comment.
+    // Let's take only the first minimally suitable comment.
     // Later on, maybe implement more sophisticated comment filtering.
     for (let i = 0; i < comments.length; i++) {
         const tsContexts = getTimestampContexts(comments[i].text)
@@ -79,13 +79,12 @@ async function fetchComments(videoId) {
     return await youtubei.fetchComments(videoId)
 }
 
-const TIMESTAMP_PATTERN = /^((?:\d?\d:)?(?:\d?\d:)\d\d)\s(.+)$/
-
 function getTimestampContexts(text) {
     // console.log('function getTimestampContexts')
     const lines = text.split("\r\n")
     // console.log('lines =', lines)
 
+    const TIMESTAMP_PATTERN = /^((?:\d?\d:)?(?:\d?\d:)\d\d)\s(.+)$/
     const chapters = []
 
     for (let i = 0; i < lines.length; i++) {
