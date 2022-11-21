@@ -44,8 +44,6 @@ export async function fetchChaptersFromComments(videoResponse) {
 
     const minNumChapters = 2
 
-    // Currently using only the first minimally suitable comment.
-    // Maybe later implement more sophisticated comment selection.
     for (let i = 0; i < comments.length; i++) {
         if (!comments[i].isPinned) {
             continue
