@@ -39,10 +39,10 @@ async function fetchChapters(videoId) {
     return await youtubei.fetchChapters(videoId)
 }
 
-// time-comments related code below
-
 export async function fetchChaptersFromComments(videoResponse) {
     const comments = await youtubei.fetchComments(videoResponse)
+
+    const minNumChapters = 2
 
     // Currently using only the first minimally suitable comment.
     // Maybe later implement more sophisticated comment selection.
@@ -51,7 +51,7 @@ export async function fetchChaptersFromComments(videoResponse) {
             continue
         }
         const tsContexts = getTimestampContexts(comments[i].text)
-        if (tsContexts.length) {
+        if (tsContexts.length >= 2) {
             return tsContexts
         }
     }    
