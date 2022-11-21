@@ -123,7 +123,6 @@ async function fetchComments(videoResponse) {
     for (const item of items) {
         if (item.commentThreadRenderer) {
             const cr = item.commentThreadRenderer.comment.commentRenderer
-            // console.log('cr =', cr)
             if (!cr.pinnedCommentBadge) { // Prioritize pinned comments
                 return comments
             }
