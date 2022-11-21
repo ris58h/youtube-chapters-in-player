@@ -88,16 +88,17 @@ export async function fetchComments(videoId) {
     for (const item of items) {
         if (item.commentThreadRenderer) {
             const cr = item.commentThreadRenderer.comment.commentRenderer
-            const authorName = cr.authorText.simpleText
-            const authorAvatar = cr.authorThumbnail.thumbnails[0].url
+            // const authorName = cr.authorText.simpleText
+            // const authorAvatar = cr.authorThumbnail.thumbnails[0].url
             const text = cr.contentText.runs
                 .map(run => run.text)
                 .join("")
-            comments.push({
-                authorName,
-                authorAvatar,
-                text
-            })
+            // comments.push({
+            //     authorName,
+            //     authorAvatar,
+            //     text
+            // })
+            comments.push({ text })
         } else if (item.continuationItemRenderer) {
             token = item.continuationItemRenderer.continuationEndpoint.continuationCommand.token
         }
