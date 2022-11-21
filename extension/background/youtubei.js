@@ -57,8 +57,8 @@ export function parseTimestamp(ts) {
 
 // time-comments related code below
 
-const MAX_COMMENT_PAGES = 5
-const MAX_COMMENTS = 100
+const MAX_COMMENT_PAGES = 1
+const MAX_COMMENTS = 20
 
 const INNERTUBE_API_KEY = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
 const INNERTUBE_CLIENT_NAME = "WEB"
