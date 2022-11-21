@@ -41,8 +41,8 @@ async function fetchChapters(videoId) {
 
 // time-comments related code below
 
-async function fetchChaptersFromComments(videoResponse) {
-    const comments = await fetchComments(videoResponse)
+export async function fetchChaptersFromComments(videoResponse) {
+    const comments = await youtubei.fetchComments(videoResponse)
 
     // Currently using only the first minimally suitable comment.
     // Maybe later implement more sophisticated comment selection.
@@ -69,7 +69,7 @@ function getTimestampContexts(text) {
 
         const timestamp = tsMatch[1]
         const title = tsMatch[2]
-        const time = parseTimestamp(timestamp)
+        const time = youtubei.parseTimestamp(timestamp)
 
         chapters.push({
             title,

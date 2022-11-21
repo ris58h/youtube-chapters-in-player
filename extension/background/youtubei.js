@@ -1,3 +1,5 @@
+import { fetchChaptersFromComments } from './background.js'
+
 const INNERTUBE_CLIENT_VERSION = "2.20211129.09.00"
 
 export async function fetchChapters(videoId) {
@@ -47,7 +49,7 @@ async function fetchVideo(videoId) {
     return await response.json()
 }
 
-function parseTimestamp(ts) {
+export function parseTimestamp(ts) {
     const parts = ts.split(':').reverse()
     const secs = parseInt(parts[0])
     if (secs > 59) {
@@ -66,7 +68,7 @@ function parseTimestamp(ts) {
 const INNERTUBE_API_KEY = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
 const INNERTUBE_CLIENT_NAME = "WEB"
 
-async function fetchComments(videoResponse) {
+export async function fetchComments(videoResponse) {
     const token = commentsContinuationToken(videoResponse)
     if (!token) {
         return []
