@@ -47,6 +47,9 @@ export async function fetchChaptersFromComments(videoResponse) {
     // Currently using only the first minimally suitable comment.
     // Maybe later implement more sophisticated comment selection.
     for (let i = 0; i < comments.length; i++) {
+        if (!comments[i].isPinned) {
+            continue
+        }
         const tsContexts = getTimestampContexts(comments[i].text)
         if (tsContexts.length) {
             return tsContexts

@@ -85,13 +85,11 @@ export async function fetchComments(videoResponse) {
     for (const item of items) {
         if (item.commentThreadRenderer) {
             const cr = item.commentThreadRenderer.comment.commentRenderer
-            if (!cr.pinnedCommentBadge) { // Prioritize pinned comments
-                return comments
-            }
+            const isPinned = cr.pinnedCommentBadge;
             const text = cr.contentText.runs
                 .map(run => run.text)
                 .join("")
-            comments.push({ text })
+            comments.push({ text, isPinned })
         } 
     }
 
