@@ -35,11 +35,18 @@ function setUpWebRequestOriginRemoval() {
     })    
 }
 
-async function fetchChapters(videoId) {
-    return await youtubei.fetchChapters(videoId)
+export async function fetchChapters(videoId) {
+    const videoResponse = await youtubei.fetchVideo(videoId)
+    let chapters = youtubei.chaptersFromVideoResponse(videoResponse)
+    if (chapters.length) {
+        return chapters
+    }
+
+    chapters = await fetchChaptersFromComments(videoResponse)
+    return chapters    
 }
 
-export async function fetchChaptersFromComments(videoResponse) {
+async function fetchChaptersFromComments(videoResponse) {
     const comments = await youtubei.fetchComments(videoResponse)
 
     const minNumChapters = 2

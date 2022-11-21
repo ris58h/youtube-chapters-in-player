@@ -1,24 +1,11 @@
-import { fetchChaptersFromComments } from './background.js'
-
 const INNERTUBE_CLIENT_VERSION = "2.20211129.09.00"
-
-export async function fetchChapters(videoId) {
-    const videoResponse = await fetchVideo(videoId)
-    let chapters = chaptersFromVideoResponse(videoResponse)
-    if (chapters.length) {
-        return chapters
-    }
-
-    chapters = await fetchChaptersFromComments(videoResponse)
-    return chapters    
-}
 
 const engagementPanelIds = [
     'engagement-panel-macro-markers-description-chapters',
     'engagement-panel-macro-markers-auto-chapters'
 ]
 
-function chaptersFromVideoResponse(videoResponse) {
+export function chaptersFromVideoResponse(videoResponse) {
     const result = videoResponse.find(e => e.response).response
         .engagementPanels.find(e => e.engagementPanelSectionListRenderer && engagementPanelIds.includes(e.engagementPanelSectionListRenderer.panelIdentifier))
         ?.engagementPanelSectionListRenderer.content.macroMarkersListRenderer.contents
@@ -38,7 +25,7 @@ function macroMarkersListItemRendererToChapter(renderer) {
     }
 }
 
-async function fetchVideo(videoId) {
+export async function fetchVideo(videoId) {
     const response = await fetch(`https://www.youtube.com/watch?v=${videoId}&pbj=1`, {
         credentials: "omit",
         headers: {
