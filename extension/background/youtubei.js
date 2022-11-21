@@ -2,8 +2,6 @@ const INNERTUBE_CLIENT_VERSION = "2.20211129.09.00"
 
 export async function fetchChapters(videoId) {
     const videoResponse = await fetchVideo(videoId)
-    // return chaptersFromVideoResponse(videoResponse)
-
     let chapters = chaptersFromVideoResponse(videoResponse)
     if (chapters.length) {
         return chapters
@@ -65,9 +63,6 @@ export function parseTimestamp(ts) {
 
 // time-comments related code below
 
-// const MAX_COMMENT_PAGES = 1
-// const MAX_COMMENTS = 20
-
 const INNERTUBE_API_KEY = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
 const INNERTUBE_CLIENT_NAME = "WEB"
 
@@ -86,10 +81,6 @@ async function fetchTimeComments(videoResponse) {
     return []
 }
 
-// async function fetchComments(videoId) {
-//     return await youtubei.fetchComments(videoId)
-// }
-
 function getTimestampContexts(text) {
     const TIMESTAMP_PATTERN = /^((?:\d?\d:)?(?:\d?\d:)\d\d)\s(.+)$/
     const chapters = []
@@ -103,7 +94,6 @@ function getTimestampContexts(text) {
 
         const timestamp = tsMatch[1]
         const title = tsMatch[2]
-
         const time = parseTimestamp(timestamp)
 
         chapters.push({
@@ -146,7 +136,7 @@ function commentsContinuationToken(videoResponse) {
     return videoResponse.find(e => e.response).response
         .contents.twoColumnWatchNextResults.results.results
         .contents.find(e => e.itemSectionRenderer && e.itemSectionRenderer.sectionIdentifier === 'comment-item-section').itemSectionRenderer
-        .contents[0].continuationItemRenderer// When comments are disabled there is messageRenderer instead.
+        .contents[0].continuationItemRenderer // When comments are disabled there is messageRenderer instead.
         ?.continuationEndpoint.continuationCommand.token
 }
 
