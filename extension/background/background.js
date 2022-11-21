@@ -11,14 +11,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             })
         return true
     }
-    if (request.type == 'fetchTimeComments') {
-        fetchTimeComments(request.videoId)
-            .then(sendResponse)
-            .catch(e => {
-                console.error(e)
-            })
-        return true
-    }
+    // if (request.type == 'fetchTimeComments') {
+    //     fetchTimeComments(request.videoId)
+    //         .then(sendResponse)
+    //         .catch(e => {
+    //             console.error(e)
+    //         })
+    //     return true
+    // }
 })
 
 function setUpWebRequestOriginRemoval() {
@@ -44,7 +44,14 @@ function setUpWebRequestOriginRemoval() {
 }
 
 async function fetchChapters(videoId) {
-    return await youtubei.fetchChapters(videoId)
+    // return await youtubei.fetchChapters(videoId)
+    let chapters = await youtubei.fetchChapters(videoId)
+    if (chapters.length) {
+        return chapters
+    }
+
+    chapters = await fetchTimeComments(videoId)
+    return chapters
 }
 
 // time-comments related code below

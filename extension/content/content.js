@@ -17,13 +17,13 @@ async function main() {
         return
     }
     
-    if (!chapters || !chapters.length) {
-        chapters = await fetchTimeComments(videoId)
-    } 
+    // if (!chapters || !chapters.length) {
+    //     chapters = await fetchTimeComments(videoId)
+    // } 
     
-    if (videoId !== getVideoId()) {
-        return
-    }
+    // if (videoId !== getVideoId()) {
+    //     return
+    // }
     
     if (chapters && chapters.length > 0) {
         createChaptersControls(chapters)
@@ -296,11 +296,11 @@ function fetchChapters(videoId) {
     })
 }
 
-function fetchTimeComments(videoId) {
-    return new Promise((resolve) => {
-        chrome.runtime.sendMessage({ type: 'fetchTimeComments', videoId }, resolve)
-    })
-}
+// function fetchTimeComments(videoId) {
+//     return new Promise((resolve) => {
+//         chrome.runtime.sendMessage({ type: 'fetchTimeComments', videoId }, resolve)
+//     })
+// }
 
 function getVideoId() {
     if (window.location.pathname == '/watch') {
