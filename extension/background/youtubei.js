@@ -1,16 +1,11 @@
 const INNERTUBE_CLIENT_VERSION = "2.20211129.09.00"
 
-export async function fetchChapters(videoId) {
-    const videoResponse = await fetchVideo(videoId)
-    return chaptersFromVideoResponse(videoResponse)
-}
-
 const engagementPanelIds = [
     'engagement-panel-macro-markers-description-chapters',
     'engagement-panel-macro-markers-auto-chapters'
 ]
 
-function chaptersFromVideoResponse(videoResponse) {
+export function chaptersFromVideoResponse(videoResponse) {
     const result = videoResponse.find(e => e.response).response
         .engagementPanels.find(e => e.engagementPanelSectionListRenderer && engagementPanelIds.includes(e.engagementPanelSectionListRenderer.panelIdentifier))
         ?.engagementPanelSectionListRenderer.content.macroMarkersListRenderer.contents
@@ -30,7 +25,7 @@ function macroMarkersListItemRendererToChapter(renderer) {
     }
 }
 
-async function fetchVideo(videoId) {
+export async function fetchVideo(videoId) {
     const response = await fetch(`https://www.youtube.com/watch?v=${videoId}&pbj=1`, {
         credentials: "omit",
         headers: {
@@ -41,7 +36,7 @@ async function fetchVideo(videoId) {
     return await response.json()
 }
 
-function parseTimestamp(ts) {
+export function parseTimestamp(ts) {
     const parts = ts.split(':').reverse()
     const secs = parseInt(parts[0])
     if (secs > 59) {
@@ -54,3 +49,65 @@ function parseTimestamp(ts) {
     const hours = parseInt(parts[2]) || 0
     return secs + (60 * mins) + (60 * 60 * hours)
 }
+
+const INNERTUBE_API_KEY = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
+const INNERTUBE_CLIENT_NAME = "WEB"
+
+export async function fetchComments(videoResponse) {
+    const token = commentsContinuationToken(videoResponse)
+    if (!token) {
+        return []
+    }
+    const commentsResponse = await fetchNext(token)
+
+    const items = commentsResponse.onResponseReceivedEndpoints[1].reloadContinuationItemsCommand.continuationItems
+    if (!items) {
+        return []
+    }
+
+    const comments = []
+
+    for (const item of items) {
+        if (item.commentThreadRenderer) {
+            const cr = item.commentThreadRenderer.comment.commentRenderer
+            const isPinned = cr.pinnedCommentBadge;
+            const text = cr.contentText.runs
+                .map(run => run.text)
+                .join("")
+            comments.push({ text, isPinned })
+        } 
+    }
+
+    return comments
+}
+
+function commentsContinuationToken(videoResponse) {
+    return videoResponse.find(e => e.response).response
+        .contents.twoColumnWatchNextResults.results.results
+        .contents.find(e => e.itemSectionRenderer && e.itemSectionRenderer.sectionIdentifier === 'comment-item-section').itemSectionRenderer
+        .contents[0].continuationItemRenderer // When comments are disabled there is messageRenderer instead.
+        ?.continuationEndpoint.continuationCommand.token
+}
+
+async function fetchNext(continuation) {
+    const body = {
+        context: {
+            client: {
+                clientName: INNERTUBE_CLIENT_NAME,
+                clientVersion: INNERTUBE_CLIENT_VERSION
+            }
+        },
+        continuation
+    }
+    const response = await fetch(`https://www.youtube.com/youtubei/v1/next?key=${INNERTUBE_API_KEY}`, {
+        method: "POST",
+        credentials: "omit",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+    })
+
+    return await response.json()
+}
+
