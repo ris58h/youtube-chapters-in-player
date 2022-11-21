@@ -35,7 +35,7 @@ function setUpWebRequestOriginRemoval() {
     })    
 }
 
-export async function fetchChapters(videoId) {
+async function fetchChapters(videoId) {
     const videoResponse = await youtubei.fetchVideo(videoId)
     let chapters = youtubei.chaptersFromVideoResponse(videoResponse)
     if (chapters.length) {
