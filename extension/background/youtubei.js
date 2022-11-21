@@ -107,17 +107,19 @@ function getTimestampContexts(text) {
 }
 
 async function fetchComments(videoResponse) {
-    let token = commentsContinuationToken(videoResponse)
+    const token = commentsContinuationToken(videoResponse)
     if (!token) {
         return []
     }
-    const comments = []
     const commentsResponse = await fetchNext(token)
 
     const items = commentsResponse.onResponseReceivedEndpoints[1].reloadContinuationItemsCommand.continuationItems
     if (!items) {
         return []
     }
+
+    const comments = []
+
     for (const item of items) {
         if (item.commentThreadRenderer) {
             const cr = item.commentThreadRenderer.comment.commentRenderer
@@ -125,10 +127,9 @@ async function fetchComments(videoResponse) {
                 .map(run => run.text)
                 .join("")
             comments.push({ text })
-        } else if (item.continuationItemRenderer) {
-            token = item.continuationItemRenderer.continuationEndpoint.continuationCommand.token
-        }
+        } 
     }
+
     return comments
 }
 
