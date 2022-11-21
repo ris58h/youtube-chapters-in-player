@@ -38,3 +38,45 @@ function setUpWebRequestOriginRemoval() {
 async function fetchChapters(videoId) {
     return await youtubei.fetchChapters(videoId)
 }
+
+// time-comments related code below
+
+async function fetchChaptersFromComments(videoResponse) {
+    const comments = await fetchComments(videoResponse)
+
+    // Currently using only the first minimally suitable comment.
+    // Maybe later implement more sophisticated comment selection.
+    for (let i = 0; i < comments.length; i++) {
+        const tsContexts = getTimestampContexts(comments[i].text)
+        if (tsContexts.length) {
+            return tsContexts
+        }
+    }    
+
+    return []
+}
+
+function getTimestampContexts(text) {
+    const TIMESTAMP_PATTERN = /^((?:\d?\d:)?(?:\d?\d:)\d\d)\s(.+)$/
+    const chapters = []
+    const lines = text.split("\r\n")
+
+    for (let i = 0; i < lines.length; i++) {
+        const tsMatch = lines[i].match(TIMESTAMP_PATTERN)
+        if (!tsMatch) {
+            return []
+        }
+
+        const timestamp = tsMatch[1]
+        const title = tsMatch[2]
+        const time = parseTimestamp(timestamp)
+
+        chapters.push({
+            title,
+            timestamp,
+            time,
+        })
+    }
+
+    return chapters
+}
