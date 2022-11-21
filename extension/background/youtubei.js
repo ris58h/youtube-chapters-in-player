@@ -47,7 +47,7 @@ async function fetchVideo(videoId) {
     return await response.json()
 }
 
-export function parseTimestamp(ts) {
+function parseTimestamp(ts) {
     const parts = ts.split(':').reverse()
     const secs = parseInt(parts[0])
     if (secs > 59) {
@@ -106,7 +106,7 @@ function getTimestampContexts(text) {
     return chapters
 }
 
-export async function fetchComments(videoResponse) {
+async function fetchComments(videoResponse) {
     let token = commentsContinuationToken(videoResponse)
     if (!token) {
         return []
