@@ -122,40 +122,23 @@ export async function fetchComments(videoResponse) {
         return []
     }
     const comments = []
-    let prevToken
-    // let pageCount = 0
-    // while (prevToken !== token && pageCount < MAX_COMMENT_PAGES && comments.length < MAX_COMMENTS) {
     const commentsResponse = await fetchNext(token)
 
-    prevToken = token
-    // const items = pageCount === 0
-    //     ? commentsResponse.onResponseReceivedEndpoints[1].reloadContinuationItemsCommand.continuationItems
-    //     : commentsResponse.onResponseReceivedEndpoints[0].appendContinuationItemsAction.continuationItems
     const items = commentsResponse.onResponseReceivedEndpoints[1].reloadContinuationItemsCommand.continuationItems
     if (!items) {
-        // break
         return []
     }
     for (const item of items) {
         if (item.commentThreadRenderer) {
             const cr = item.commentThreadRenderer.comment.commentRenderer
-            // const authorName = cr.authorText.simpleText
-            // const authorAvatar = cr.authorThumbnail.thumbnails[0].url
             const text = cr.contentText.runs
                 .map(run => run.text)
                 .join("")
-            // comments.push({
-            //     authorName,
-            //     authorAvatar,
-            //     text
-            // })
             comments.push({ text })
         } else if (item.continuationItemRenderer) {
             token = item.continuationItemRenderer.continuationEndpoint.continuationCommand.token
         }
     }
-    // pageCount++
-    // }
     return comments
 }
 
