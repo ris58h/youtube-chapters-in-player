@@ -11,14 +11,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             })
         return true
     }
-    // if (request.type == 'fetchTimeComments') {
-    //     fetchTimeComments(request.videoId)
-    //         .then(sendResponse)
-    //         .catch(e => {
-    //             console.error(e)
-    //         })
-    //     return true
-    // }
 })
 
 function setUpWebRequestOriginRemoval() {
@@ -26,7 +18,7 @@ function setUpWebRequestOriginRemoval() {
         permissions: ['webRequestBlocking'],
         origins: ['https://www.youtube.com/']
     }, (permissionExists) => {
-        if (permissionExists) {
+        if (permissionExists) { // In Firefox (Manifest V2)
             // YouTube declines requests with wrong Origin.
             // We have to remove the Origin header which is added automatically by the browser.
             chrome.webRequest.onBeforeSendHeaders.addListener(
@@ -39,7 +31,7 @@ function setUpWebRequestOriginRemoval() {
                 {urls: ["https://www.youtube.com/*"]},
                 ["blocking", "requestHeaders", chrome.webRequest.OnBeforeSendHeadersOptions.EXTRA_HEADERS].filter(Boolean)
             )
-        } // Otherwise Origin is removed via declarative net request
+        } // In Chrome/Chromium (Manifest V3), Origin is removed via declarative net request
     })    
 }
 
