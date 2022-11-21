@@ -7,7 +7,7 @@ export async function fetchChapters(videoId) {
         return chapters
     }
 
-    chapters = await fetchTimeComments(videoResponse)
+    chapters = await fetchChaptersFromComments(videoResponse)
     return chapters    
 }
 
@@ -66,7 +66,7 @@ function parseTimestamp(ts) {
 const INNERTUBE_API_KEY = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
 const INNERTUBE_CLIENT_NAME = "WEB"
 
-async function fetchTimeComments(videoResponse) {
+async function fetchChaptersFromComments(videoResponse) {
     const comments = await fetchComments(videoResponse)
 
     // Currently using only the first minimally suitable comment.
