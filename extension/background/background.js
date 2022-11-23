@@ -69,12 +69,18 @@ function getTimestampContexts(text) {
     const timestampSplitPattern = /((?:\d?\d:)?(?:\d?\d:)\d\d)\s/
 
     const chapters = []
-    const lines = text.split('\r\n')
+    const lines = text.split(/\r?\n/)
+    console.log('lines =', lines)
 
     for (let i = 0; i < lines.length; i++) {
+        console.log('i =', i)
+        console.log('lines[i] =', lines[i])
         const parts = lines[i]
             .trim()
             .split(timestampSplitPattern) 
+
+        console.log('parts =', parts)
+
         // Normally:
         //   parts.length is always an odd number
         //   parts[0] contains an empty string (and is not used);
@@ -96,11 +102,11 @@ function getTimestampContexts(text) {
         }
 
         const lastTimestampPos = parts.length - 2
-        
+
         for (let p = 1; p <= lastTimestampPos; p += 2) {
-            // console.log('p =', p)
-            // console.log(parts[p])
-            // console.log(parts[p + 1])
+            console.log('p =', p)
+            console.log(parts[p])
+            console.log(parts[p + 1])
             const title = parts[p + 1].trim()
             if (!title.length) {
                 continue
