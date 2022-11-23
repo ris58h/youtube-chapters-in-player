@@ -56,7 +56,7 @@ async function fetchChaptersFromComments(videoResponse) {
             continue
         }
         const tsContexts = getTimestampContexts(comments[i].text)
-        if (tsContexts.length >= 2) {
+        if (tsContexts.length >= minNumChapters) {
             return tsContexts
         }
     }    
