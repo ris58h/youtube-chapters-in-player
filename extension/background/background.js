@@ -93,7 +93,21 @@ function getTimestampContexts(text) {
         // =>
         // ['', '0:09:27', 'стек вызовов / Call Stack ', '0:18:26', 'Mixed Solution ', '0:21:42', 'принцип LIFO']
 
+        // Example 3:
+        // 'стек вызовов / Call Stack 0:18:26 Some text'
+        // =>
+        // ['стек вызовов / Call Stack ', '0:18:26', 'Some text']
+
+        // Example 4:
+        // ''
+        // =>
+        // ['']        
+
         if (parts.length < 3) {
+            continue
+        }
+
+        if (parts[0].trim().length) { // Non-empty string in parts[0] is an abnormal case
             continue
         }
 
