@@ -65,21 +65,15 @@ async function fetchChaptersFromComments(videoResponse) {
 }
 
 function getTimestampContexts(text) {
-    // const TIMESTAMP_PATTERN = /^((?:\d?\d:)?(?:\d?\d:)\d\d)\s(.+)$/
     const timestampSplitPattern = /((?:\d?\d:)?(?:\d?\d:)\d\d)\s/
 
     const chapters = []
     const lines = text.split(/\r?\n/)
-    console.log('lines =', lines)
 
     for (let i = 0; i < lines.length; i++) {
-        console.log('i =', i)
-        console.log('lines[i] =', lines[i])
         const parts = lines[i]
             .trim()
             .split(timestampSplitPattern) 
-
-        console.log('parts =', parts)
 
         // Normally:
         //   parts.length is always an odd number
@@ -104,9 +98,6 @@ function getTimestampContexts(text) {
         const lastTimestampPos = parts.length - 2
 
         for (let p = 1; p <= lastTimestampPos; p += 2) {
-            console.log('p =', p)
-            console.log(parts[p])
-            console.log(parts[p + 1])
             const title = parts[p + 1].trim()
             if (!title.length) {
                 continue
@@ -122,23 +113,6 @@ function getTimestampContexts(text) {
             })         
         }
     }
-
-    // for (let i = 0; i < lines.length; i++) {
-    //     const tsMatch = lines[i].match(TIMESTAMP_PATTERN)
-    //     if (!tsMatch) {
-    //         return []
-    //     }
-
-    //     const timestamp = tsMatch[1]
-    //     const title = tsMatch[2]
-    //     const time = youtubei.parseTimestamp(timestamp)
-
-    //     chapters.push({
-    //         title,
-    //         timestamp,
-    //         time,
-    //     })
-    // }
 
     return chapters
 }
