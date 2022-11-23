@@ -65,26 +65,74 @@ async function fetchChaptersFromComments(videoResponse) {
 }
 
 function getTimestampContexts(text) {
-    const TIMESTAMP_PATTERN = /^((?:\d?\d:)?(?:\d?\d:)\d\d)\s(.+)$/
+    // const TIMESTAMP_PATTERN = /^((?:\d?\d:)?(?:\d?\d:)\d\d)\s(.+)$/
+    const timestampSplitPattern = /((?:\d?\d:)?(?:\d?\d:)\d\d)\s/
+
     const chapters = []
-    const lines = text.split("\r\n")
+    const lines = text.split('\r\n')
 
     for (let i = 0; i < lines.length; i++) {
-        const tsMatch = lines[i].match(TIMESTAMP_PATTERN)
-        if (!tsMatch) {
-            return []
+        const parts = lines[i]
+            .trim()
+            .split(timestampSplitPattern) 
+        // Normally:
+        //   parts.length is always an odd number
+        //   parts[0] contains an empty string (and is not used);
+        //   parts[1], parts[3], etc. contain a chapter timestamp;
+        //   parts[2], parts[4], etc. contain a chapter title.   
+
+        // Example 1:
+        // '0:09:27 стек вызовов / Call Stack'
+        // =>
+        // ['', '0:09:27', 'стек вызовов / Call Stack']
+
+        // Example 2:
+        // ' 0:09:27 стек вызовов / Call Stack 0:18:26 Mixed Solution 0:21:42 принцип LIFO'
+        // =>
+        // ['', '0:09:27', 'стек вызовов / Call Stack ', '0:18:26', 'Mixed Solution ', '0:21:42', 'принцип LIFO']
+
+        if (parts.length < 3) {
+            continue
         }
 
-        const timestamp = tsMatch[1]
-        const title = tsMatch[2]
-        const time = youtubei.parseTimestamp(timestamp)
+        const lastTimestampPos = parts.length - 2
+        
+        for (let p = 1; p <= lastTimestampPos; p += 2) {
+            // console.log('p =', p)
+            // console.log(parts[p])
+            // console.log(parts[p + 1])
+            const title = parts[p + 1].trim()
+            if (!title.length) {
+                continue
+            }
+            
+            const timestamp = parts[p]
+            const time = youtubei.parseTimestamp(timestamp)
 
-        chapters.push({
-            title,
-            timestamp,
-            time,
-        })
+            chapters.push({
+                title,
+                timestamp,
+                time,
+            })         
+        }
     }
+
+    // for (let i = 0; i < lines.length; i++) {
+    //     const tsMatch = lines[i].match(TIMESTAMP_PATTERN)
+    //     if (!tsMatch) {
+    //         return []
+    //     }
+
+    //     const timestamp = tsMatch[1]
+    //     const title = tsMatch[2]
+    //     const time = youtubei.parseTimestamp(timestamp)
+
+    //     chapters.push({
+    //         title,
+    //         timestamp,
+    //         time,
+    //     })
+    // }
 
     return chapters
 }
