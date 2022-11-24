@@ -65,21 +65,14 @@ function getTimestampContexts(text) {
     const chapters = []
     const lines = text.split("\r\n")
 
-    for (let i = 0; i < lines.length; i++) {
-        const tsMatch = lines[i].match(timestampPattern)
-        if (!tsMatch) {
-            continue
+    for (const line of lines) {
+        const tsMatch = line.match(timestampPattern)
+        if (tsMatch) {
+            const timestamp = tsMatch[1]
+            const title = tsMatch[2]
+            const time = youtubei.parseTimestamp(timestamp)    
+            chapters.push({ title, timestamp, time })
         }
-
-        const timestamp = tsMatch[1]
-        const title = tsMatch[2]
-        const time = youtubei.parseTimestamp(timestamp)
-
-        chapters.push({
-            title,
-            timestamp,
-            time,
-        })
     }
 
     return chapters
