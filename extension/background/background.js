@@ -40,7 +40,6 @@ async function fetchChapters(videoId) {
     let chapters = youtubei.chaptersFromVideoResponse(videoResponse)
 
     const commentChapters = await fetchChaptersFromComments(videoResponse)
-    console.log('commentChapters =', commentChapters)
 
     if (chapters.length > commentChapters.length) {
         return chapters
@@ -67,15 +66,12 @@ async function fetchChaptersFromComments(videoResponse) {
 }
 
 function getTimestampContexts(text) {
-    // const timestampSplitPattern = /((?:\d?\d:)?(?:\d?\d:)\d\d)\s/
     const timestampSplitPattern = /((?:\d?\d:)?(?:\d?\d:)\d\d)(?:\s|$)/
 
     const chapters = []
     const lines = text.split(/\r?\n/)
 
     for (let i = 0; i < lines.length; i++) {
-        console.log('lines[i] =', lines[i])
-
         const parts = lines[i]
             .trim()
             .split(timestampSplitPattern) 
@@ -86,61 +82,51 @@ function getTimestampContexts(text) {
         //   parts[1], parts[3], etc. contain a chapter timestamp;
         //   parts[2], parts[4], etc. contain a chapter title.   
 
-        // Example 1:
+        // Example 1 (normal case):
         // '0:09:27 стек вызовов / Call Stack'
         // =>
         // ['', '0:09:27', 'стек вызовов / Call Stack']
 
-        // Example 2:
+        // Example 2 (normal case):
         // ' 0:09:27 стек вызовов / Call Stack 0:18:26 Mixed Solution 0:21:42 принцип LIFO'
         // =>
         // ['', '0:09:27', 'стек вызовов / Call Stack ', '0:18:26', 'Mixed Solution ', '0:21:42', 'принцип LIFO']
 
-        // Example 3:
+        // Example 3 (abnormal case: : title before timestamp):
         // 'стек вызовов / Call Stack 0:18:26 Some text'
         // =>
         // ['стек вызовов / Call Stack ', '0:18:26', 'Some text']
 
-        // Example 4:
+        // Example 4 (no chapters):
         // ''
         // =>
         // ['']        
 
-        // Example 5 (titles before timestamps):
+        // Example 5 (abnormal case: titles before timestamps):
         // 'Линус Торвальдс: программирование 1:23:25 код 01:23:50 структуры данных 1:25:00'
         // =>
         // ['Линус Торвальдс: программирование ', '1:23:25', 'код ', '01:23:50', 'структуры данных ', '1:25:00', '']           
-
-        console.log('parts =', parts)
 
         if (parts.length < 3) {
             continue
         }
 
-        // if (parts[0].trim().length) { // Non-empty string in parts[0] is an abnormal case
-        //     continue
-        // }
-
         const isTitleBeforeTimestamp = parts[0].trim().length
-
         const startPos = isTitleBeforeTimestamp ? 0 : 1
-        // const endPos = isTitleBeforeTimestamp ? 0 : 1
         const lastTimestampPos = parts.length - 2
 
         for (let p = startPos; p <= lastTimestampPos; p += 2) {
             const titlePos = isTitleBeforeTimestamp ? p : p + 1
             const title = parts[titlePos].trim()
 
-            // const title = parts[p + 1].trim()
             if (!title.length) {
                 continue
             }
 
-            const timestampPos = isTitleBeforeTimestamp ? p + 1 : p            
-
+            const timestampPos = isTitleBeforeTimestamp ? p + 1 : p
             let timestamp = parts[timestampPos]
             const time = youtubei.parseTimestamp(timestamp)
-            
+
             const leadingZeroMatch = timestamp.match(/^0([1-9]:\d\d.*)$/)
             if (leadingZeroMatch) {
                 timestamp = leadingZeroMatch.slice(1)
