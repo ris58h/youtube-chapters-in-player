@@ -67,12 +67,15 @@ async function fetchChaptersFromComments(videoResponse) {
 }
 
 function getTimestampContexts(text) {
-    const timestampSplitPattern = /((?:\d?\d:)?(?:\d?\d:)\d\d)\s/
+    // const timestampSplitPattern = /((?:\d?\d:)?(?:\d?\d:)\d\d)\s/
+    const timestampSplitPattern = /((?:\d?\d:)?(?:\d?\d:)\d\d)(?:\s|$)/
 
     const chapters = []
     const lines = text.split(/\r?\n/)
 
     for (let i = 0; i < lines.length; i++) {
+        console.log('lines[i] =', lines[i])
+
         const parts = lines[i]
             .trim()
             .split(timestampSplitPattern) 
@@ -103,23 +106,38 @@ function getTimestampContexts(text) {
         // =>
         // ['']        
 
+        // Example 5:
+        // 'Линус Торвальдс: программирование 1:23:25 код 01:23:50 структуры данных 1:25:00'
+        // =>
+        // ['Линус Торвальдс: программирование ', '1:23:25', 'код ', '01:23:50', 'структуры данных 1:25:00']           
+
+        console.log('parts =', parts)
+
         if (parts.length < 3) {
             continue
         }
 
-        if (parts[0].trim().length) { // Non-empty string in parts[0] is an abnormal case
-            continue
-        }
+        // if (parts[0].trim().length) { // Non-empty string in parts[0] is an abnormal case
+        //     continue
+        // }
 
+        const isTitleBeforeTimestamp = parts[0].trim().length
+
+        const startPos = isTitleBeforeTimestamp ? 0 : 1
+        // const endPos = isTitleBeforeTimestamp ? 0 : 1
         const lastTimestampPos = parts.length - 2
 
-        for (let p = 1; p <= lastTimestampPos; p += 2) {
-            const title = parts[p + 1].trim()
+        for (let p = startPos; p <= lastTimestampPos; p += 2) {
+            const titlePos = isTitleBeforeTimestamp ? p : p + 1
+            const title = parts[titlePos].trim()
+
+            // const title = parts[p + 1].trim()
             if (!title.length) {
                 continue
             }
-            
-            const timestamp = parts[p]
+
+            const timestampPos = isTitleBeforeTimestamp ? p + 1 : p            
+            const timestamp = parts[timestampPos]
             const time = youtubei.parseTimestamp(timestamp)
 
             chapters.push({
@@ -130,5 +148,6 @@ function getTimestampContexts(text) {
         }
     }
 
+    chapters.sort((a, b) => a.time - b.time)
     return chapters
 }
