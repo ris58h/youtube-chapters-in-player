@@ -48,21 +48,17 @@ async function fetchChapters(videoId) {
 
 async function fetchChaptersFromComments(videoResponse) {
     const comments = await youtubei.fetchComments(videoResponse)
+    const pinnedComment = comments.find((comment) => comment.isPinned)
+    if (!pinnedComment) {
+        return []
+    }
 
+    const tsContexts = getTimestampContexts(pinnedComment.text)
     const minNumChapters = 2
 
-    for (let i = 0; i < comments.length; i++) {
-        if (!comments[i].isPinned) {
-            continue
-        }
-        const tsContexts = getTimestampContexts(comments[i].text)
-        if (tsContexts.length >= 2) {
-            return tsContexts
-        }
-    }    
-
-    return []
+    return (tsContexts.length >= minNumChapters) ? tsContexts : []
 }
+
 
 function getTimestampContexts(text) {
     const TIMESTAMP_PATTERN = /^((?:\d?\d:)?(?:\d?\d:)\d\d)\s(.+)$/
