@@ -56,7 +56,7 @@ async function fetchChaptersFromComments(videoResponse) {
     const tsContexts = getTimestampContexts(pinnedComment.text)
     const minNumChapters = 2
 
-    return (tsContexts.length >= minNumChapters) ? tsContexts : []
+    return tsContexts.length >= minNumChapters ? tsContexts : []
 }
 
 
