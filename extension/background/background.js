@@ -48,42 +48,31 @@ async function fetchChapters(videoId) {
 
 async function fetchChaptersFromComments(videoResponse) {
     const comments = await youtubei.fetchComments(videoResponse)
+    const pinnedComment = comments.find((comment) => comment.isPinned)
+    if (!pinnedComment) {
+        return []
+    }
 
+    const tsContexts = getTimestampContexts(pinnedComment.text)
     const minNumChapters = 2
 
-    for (let i = 0; i < comments.length; i++) {
-        if (!comments[i].isPinned) {
-            continue
-        }
-        const tsContexts = getTimestampContexts(comments[i].text)
-        if (tsContexts.length >= 2) {
-            return tsContexts
-        }
-    }    
-
-    return []
+    return tsContexts.length >= minNumChapters ? tsContexts : []
 }
 
+
 function getTimestampContexts(text) {
-    const TIMESTAMP_PATTERN = /^((?:\d?\d:)?(?:\d?\d:)\d\d)\s(.+)$/
+    const timestampPattern = /^((?:\d?\d:)?(?:\d?\d:)\d\d)\s(.+)$/
     const chapters = []
-    const lines = text.split("\r\n")
+    const lines = text.split(/\r?\n/)
 
-    for (let i = 0; i < lines.length; i++) {
-        const tsMatch = lines[i].match(TIMESTAMP_PATTERN)
-        if (!tsMatch) {
-            return []
+    for (const line of lines) {
+        const tsMatch = line.match(timestampPattern)
+        if (tsMatch) {
+            const timestamp = tsMatch[1]
+            const title = tsMatch[2]
+            const time = youtubei.parseTimestamp(timestamp)    
+            chapters.push({ title, timestamp, time })
         }
-
-        const timestamp = tsMatch[1]
-        const title = tsMatch[2]
-        const time = youtubei.parseTimestamp(timestamp)
-
-        chapters.push({
-            title,
-            timestamp,
-            time,
-        })
     }
 
     return chapters
