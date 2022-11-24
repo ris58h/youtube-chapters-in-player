@@ -4,7 +4,8 @@ setUpWebRequestOriginRemoval()
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type == 'fetchChapters') {
-        fetchChapters(request.videoId)
+        const { videoId, durationText } = request.payload
+        fetchChapters(videoId, durationText)
             .then(sendResponse)
             .catch(e => {
                 console.error(e)
@@ -35,11 +36,11 @@ function setUpWebRequestOriginRemoval() {
     })    
 }
 
-async function fetchChapters(videoId) {
+async function fetchChapters(videoId, durationText) {
     const videoResponse = await youtubei.fetchVideo(videoId)
     let chapters = youtubei.chaptersFromVideoResponse(videoResponse)
 
-    const commentChapters = await fetchChaptersFromComments(videoResponse)
+    const commentChapters = await fetchChaptersFromComments(videoResponse, durationText)
 
     if (chapters.length > commentChapters.length) {
         return chapters
@@ -47,16 +48,16 @@ async function fetchChapters(videoId) {
     return commentChapters
 }
 
-async function fetchChaptersFromComments(videoResponse) {
+async function fetchChaptersFromComments(videoResponse, durationText) {
     const comments = await youtubei.fetchComments(videoResponse)
-
+    const duration = durationText ? youtubei.parseTimestamp(durationText) : undefined
     const minNumChapters = 2
 
     for (let i = 0; i < comments.length; i++) {
         if (!comments[i].isPinned) {
             continue
         }
-        const tsContexts = getTimestampContexts(comments[i].text)
+        const tsContexts = getTimestampContexts(comments[i].text, duration)
         if (tsContexts.length >= minNumChapters) {
             return tsContexts
         }
@@ -65,7 +66,7 @@ async function fetchChaptersFromComments(videoResponse) {
     return []
 }
 
-function getTimestampContexts(text) {
+function getTimestampContexts(text, duration) {
     const timestampSplitPattern = /((?:\d?\d:)?(?:\d?\d:)\d\d)(?:\s|$)/
 
     const chapters = []
@@ -115,6 +116,8 @@ function getTimestampContexts(text) {
         const startPos = isTitleBeforeTimestamp ? 0 : 1
         const lastTimestampPos = parts.length - 2
 
+        const leadingZeroPattern = /^0([1-9]:\d\d.*)$/
+
         for (let p = startPos; p <= lastTimestampPos; p += 2) {
             const titlePos = isTitleBeforeTimestamp ? p : p + 1
             const title = parts[titlePos].trim()
@@ -126,11 +129,13 @@ function getTimestampContexts(text) {
             const timestampPos = isTitleBeforeTimestamp ? p + 1 : p
             let timestamp = parts[timestampPos]
             const time = youtubei.parseTimestamp(timestamp)
+            if (duration !== undefined && time > duration) {
+                continue
+            }
 
-            const leadingZeroMatch = timestamp.match(/^0([1-9]:\d\d.*)$/)
-            if (leadingZeroMatch) {
+            if (leadingZeroPattern.test(timestamp)) {
                 timestamp = leadingZeroMatch.slice(1)
-            }            
+            }                      
 
             chapters.push({
                 title,
