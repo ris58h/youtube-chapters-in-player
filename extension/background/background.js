@@ -50,20 +50,16 @@ async function fetchChapters(videoId, durationText) {
 
 async function fetchChaptersFromComments(videoResponse, durationText) {
     const comments = await youtubei.fetchComments(videoResponse)
+    const pinnedComment = comments.find((comment) => comment.isPinned)
+    if (!pinnedComment) {
+        return []
+    }
+
     const duration = durationText ? youtubei.parseTimestamp(durationText) : undefined
+    const tsContexts = getTimestampContexts(pinnedComment.text, duration)
     const minNumChapters = 2
 
-    for (let i = 0; i < comments.length; i++) {
-        if (!comments[i].isPinned) {
-            continue
-        }
-        const tsContexts = getTimestampContexts(comments[i].text, duration)
-        if (tsContexts.length >= minNumChapters) {
-            return tsContexts
-        }
-    }    
-
-    return []
+    return (tsContexts.length >= minNumChapters) ? tsContexts : []
 }
 
 function getTimestampContexts(text, duration) {
