@@ -4,7 +4,8 @@ setUpWebRequestOriginRemoval()
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type == 'fetchChapters') {
-        fetchChapters(request.videoId)
+        const { videoId, durationText } = request.payload
+        fetchChapters(videoId, durationText)
             .then(sendResponse)
             .catch(e => {
                 console.error(e)
@@ -35,56 +36,111 @@ function setUpWebRequestOriginRemoval() {
     })    
 }
 
-async function fetchChapters(videoId) {
+async function fetchChapters(videoId, durationText) {
     const videoResponse = await youtubei.fetchVideo(videoId)
     let chapters = youtubei.chaptersFromVideoResponse(videoResponse)
-    if (chapters.length) {
+
+    const commentChapters = await fetchChaptersFromComments(videoResponse, durationText)
+
+    if (chapters.length > commentChapters.length) {
         return chapters
     }
-
-    chapters = await fetchChaptersFromComments(videoResponse)
-    return chapters    
+    return commentChapters
 }
 
-async function fetchChaptersFromComments(videoResponse) {
+async function fetchChaptersFromComments(videoResponse, durationText) {
     const comments = await youtubei.fetchComments(videoResponse)
-
-    const minNumChapters = 2
-
-    for (let i = 0; i < comments.length; i++) {
-        if (!comments[i].isPinned) {
-            continue
-        }
-        const tsContexts = getTimestampContexts(comments[i].text)
-        if (tsContexts.length >= 2) {
-            return tsContexts
-        }
-    }    
-
-    return []
-}
-
-function getTimestampContexts(text) {
-    const TIMESTAMP_PATTERN = /^((?:\d?\d:)?(?:\d?\d:)\d\d)\s(.+)$/
-    const chapters = []
-    const lines = text.split("\r\n")
-
-    for (let i = 0; i < lines.length; i++) {
-        const tsMatch = lines[i].match(TIMESTAMP_PATTERN)
-        if (!tsMatch) {
-            return []
-        }
-
-        const timestamp = tsMatch[1]
-        const title = tsMatch[2]
-        const time = youtubei.parseTimestamp(timestamp)
-
-        chapters.push({
-            title,
-            timestamp,
-            time,
-        })
+    const pinnedComment = comments.find((comment) => comment.isPinned)
+    if (!pinnedComment) {
+        return []
     }
 
+    const duration = durationText ? youtubei.parseTimestamp(durationText) : undefined
+    const tsContexts = getTimestampContexts(pinnedComment.text, duration)
+    const minNumChapters = 2
+
+    return (tsContexts.length >= minNumChapters) ? tsContexts : []
+}
+
+function getTimestampContexts(text, duration) {
+    const timestampSplitPattern = /((?:\d?\d:)?(?:\d?\d:)\d\d)(?:\s|$)/
+
+    const chapters = []
+    const lines = text.split(/\r?\n/)
+
+    for (let i = 0; i < lines.length; i++) {
+        const parts = lines[i]
+            .trim()
+            .split(timestampSplitPattern) 
+
+        // Normally:
+        //   parts.length is always an odd number
+        //   parts[0] contains an empty string (and is not used);
+        //   parts[1], parts[3], etc. contain a chapter timestamp;
+        //   parts[2], parts[4], etc. contain a chapter title.   
+
+        // Example 1 (normal case):
+        // '0:09:27 стек вызовов / Call Stack'
+        // =>
+        // ['', '0:09:27', 'стек вызовов / Call Stack']
+
+        // Example 2 (normal case):
+        // ' 0:09:27 стек вызовов / Call Stack 0:18:26 Mixed Solution 0:21:42 принцип LIFO'
+        // =>
+        // ['', '0:09:27', 'стек вызовов / Call Stack ', '0:18:26', 'Mixed Solution ', '0:21:42', 'принцип LIFO']
+
+        // Example 3 (abnormal case: : title before timestamp):
+        // 'стек вызовов / Call Stack 0:18:26 Some text'
+        // =>
+        // ['стек вызовов / Call Stack ', '0:18:26', 'Some text']
+
+        // Example 4 (no chapters):
+        // ''
+        // =>
+        // ['']        
+
+        // Example 5 (abnormal case: titles before timestamps):
+        // 'Линус Торвальдс: программирование 1:23:25 код 01:23:50 структуры данных 1:25:00'
+        // =>
+        // ['Линус Торвальдс: программирование ', '1:23:25', 'код ', '01:23:50', 'структуры данных ', '1:25:00', '']           
+
+        if (parts.length < 3) {
+            continue
+        }
+
+        const isTitleBeforeTimestamp = parts[0].trim().length
+        const startPos = isTitleBeforeTimestamp ? 0 : 1
+        const lastTimestampPos = parts.length - 2
+
+        const leadingZeroPattern = /^0([1-9]:\d\d.*)$/
+
+        for (let p = startPos; p <= lastTimestampPos; p += 2) {
+            const titlePos = isTitleBeforeTimestamp ? p : p + 1
+            const title = parts[titlePos].trim()
+
+            if (!title.length) {
+                continue
+            }
+
+            const timestampPos = isTitleBeforeTimestamp ? p + 1 : p
+            let timestamp = parts[timestampPos]
+            const time = youtubei.parseTimestamp(timestamp)
+            if (duration !== undefined && time > duration) {
+                continue
+            }
+
+            if (leadingZeroPattern.test(timestamp)) {
+                timestamp = leadingZeroMatch.slice(1)
+            }                      
+
+            chapters.push({
+                title,
+                timestamp,
+                time,
+            })         
+        }
+    }
+
+    chapters.sort((a, b) => a.time - b.time)
     return chapters
 }
