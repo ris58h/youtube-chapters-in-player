@@ -137,8 +137,14 @@ function getTimestampContexts(text) {
             }
 
             const timestampPos = isTitleBeforeTimestamp ? p + 1 : p            
-            const timestamp = parts[timestampPos]
+
+            let timestamp = parts[timestampPos]
             const time = youtubei.parseTimestamp(timestamp)
+            
+            const leadingZeroMatch = timestamp.match(/^0([1-9]:\d\d.*)$/)
+            if (leadingZeroMatch) {
+                timestamp = leadingZeroMatch.slice(1)
+            }            
 
             chapters.push({
                 title,
