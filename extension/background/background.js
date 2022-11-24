@@ -61,14 +61,14 @@ async function fetchChaptersFromComments(videoResponse) {
 
 
 function getTimestampContexts(text) {
-    const TIMESTAMP_PATTERN = /^((?:\d?\d:)?(?:\d?\d:)\d\d)\s(.+)$/
+    const timestampPattern = /^((?:\d?\d:)?(?:\d?\d:)\d\d)\s(.+)$/
     const chapters = []
     const lines = text.split("\r\n")
 
     for (let i = 0; i < lines.length; i++) {
-        const tsMatch = lines[i].match(TIMESTAMP_PATTERN)
+        const tsMatch = lines[i].match(timestampPattern)
         if (!tsMatch) {
-            return []
+            continue
         }
 
         const timestamp = tsMatch[1]
