@@ -16,13 +16,7 @@ export function chaptersFromVideoResponse(videoResponse) {
 
 export function lengthSecondsFromVideoResponse(videoResponse) {
     const { playerResponse } = videoResponse.find((item) => item.playerResponse)
-    // console.log('playerResponse =', playerResponse)
-    const { microformat } = playerResponse
-    // console.log('microformat =', microformat)
-    const { playerMicroformatRenderer } = microformat
-    // console.log('playerMicroformatRenderer =', playerMicroformatRenderer)
-    const { lengthSeconds } = playerMicroformatRenderer
-    // console.log('lengthSeconds =', lengthSeconds)
+    const { lengthSeconds } = playerResponse.microformat.playerMicroformatRenderer
     return lengthSeconds
 }
 
