@@ -6,15 +6,12 @@ onLocationHrefChange(() => {
 })
 
 async function main() {
-    const durationSpan = document.querySelector('span.ytp-time-duration')
-    const durationText = durationSpan ? durationSpan.innerText.trim() : ''    
-
     const videoId = getVideoId()
     if (!videoId) {
         return
     }
 
-    let chapters = await fetchChapters(videoId, durationText)
+    let chapters = await fetchChapters(videoId)
 
     if (videoId !== getVideoId()) {
         return
@@ -285,9 +282,9 @@ function getChapterIndex(chapters, time) {
     return -1
 }
 
-function fetchChapters(videoId, durationText) {
+function fetchChapters(videoId) {
     return new Promise((resolve) => {
-        chrome.runtime.sendMessage({ type: 'fetchChapters', payload: { videoId, durationText } }, resolve)
+        chrome.runtime.sendMessage({ type: 'fetchChapters', payload: { videoId } }, resolve)
     })
 }
 

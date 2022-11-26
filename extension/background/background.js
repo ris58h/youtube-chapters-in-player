@@ -4,8 +4,8 @@ setUpWebRequestOriginRemoval()
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type == 'fetchChapters') {
-        const { videoId, durationText } = request.payload
-        fetchChapters(videoId, durationText)
+        const { videoId } = request.payload
+        fetchChapters(videoId)
             .then(sendResponse)
             .catch(e => {
                 console.error(e)
@@ -36,11 +36,11 @@ function setUpWebRequestOriginRemoval() {
     })    
 }
 
-async function fetchChapters(videoId, durationText) {
+async function fetchChapters(videoId) {
     const videoResponse = await youtubei.fetchVideo(videoId)
     let chapters = youtubei.chaptersFromVideoResponse(videoResponse)
 
-    const commentChapters = await fetchChaptersFromComments(videoResponse, durationText)
+    const commentChapters = await fetchChaptersFromComments(videoResponse)
 
     if (chapters.length > commentChapters.length) {
         return chapters
@@ -48,24 +48,21 @@ async function fetchChapters(videoId, durationText) {
     return commentChapters
 }
 
-async function fetchChaptersFromComments(videoResponse, durationText) {
+async function fetchChaptersFromComments(videoResponse) {
     const comments = await youtubei.fetchComments(videoResponse)
     const pinnedComment = comments.find((comment) => comment.isPinned)
     if (!pinnedComment) {
         return []
     }
 
-    // const duration = durationText ? youtubei.parseTimestamp(durationText) : undefined
     const lengthSeconds = parseInt(youtubei.lengthSecondsFromVideoResponse(videoResponse))
     console.log('lengthSeconds =', lengthSeconds)
-    // const tsContexts = getTimestampContexts(pinnedComment.text, duration)
     const tsContexts = getTimestampContexts(pinnedComment.text, lengthSeconds)
     const minNumChapters = 2
 
     return (tsContexts.length >= minNumChapters) ? tsContexts : []
 }
 
-// function getTimestampContexts(text, duration) {
 function getTimestampContexts(text, lengthSeconds) {
     const timestampSplitPattern = /((?:\d?\d:)?(?:\d?\d:)\d\d)(?:\s|$)/
 
@@ -129,7 +126,6 @@ function getTimestampContexts(text, lengthSeconds) {
             const timestampPos = isTitleBeforeTimestamp ? p + 1 : p
             let timestamp = parts[timestampPos]
             const time = youtubei.parseTimestamp(timestamp)
-            // if (duration !== undefined && time > duration) {
             if (time > lengthSeconds) {
                 continue
             }
