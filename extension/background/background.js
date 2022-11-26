@@ -55,14 +55,18 @@ async function fetchChaptersFromComments(videoResponse, durationText) {
         return []
     }
 
-    const duration = durationText ? youtubei.parseTimestamp(durationText) : undefined
-    const tsContexts = getTimestampContexts(pinnedComment.text, duration)
+    // const duration = durationText ? youtubei.parseTimestamp(durationText) : undefined
+    const lengthSeconds = parseInt(youtubei.lengthSecondsFromVideoResponse(videoResponse))
+    console.log('lengthSeconds =', lengthSeconds)
+    // const tsContexts = getTimestampContexts(pinnedComment.text, duration)
+    const tsContexts = getTimestampContexts(pinnedComment.text, lengthSeconds)
     const minNumChapters = 2
 
     return (tsContexts.length >= minNumChapters) ? tsContexts : []
 }
 
-function getTimestampContexts(text, duration) {
+// function getTimestampContexts(text, duration) {
+function getTimestampContexts(text, lengthSeconds) {
     const timestampSplitPattern = /((?:\d?\d:)?(?:\d?\d:)\d\d)(?:\s|$)/
 
     const chapters = []
@@ -125,7 +129,8 @@ function getTimestampContexts(text, duration) {
             const timestampPos = isTitleBeforeTimestamp ? p + 1 : p
             let timestamp = parts[timestampPos]
             const time = youtubei.parseTimestamp(timestamp)
-            if (duration !== undefined && time > duration) {
+            // if (duration !== undefined && time > duration) {
+            if (time > lengthSeconds) {
                 continue
             }
 

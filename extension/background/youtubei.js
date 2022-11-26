@@ -14,6 +14,18 @@ export function chaptersFromVideoResponse(videoResponse) {
     return result ? result : []
 }
 
+export function lengthSecondsFromVideoResponse(videoResponse) {
+    const { playerResponse } = videoResponse.find((item) => item.playerResponse)
+    // console.log('playerResponse =', playerResponse)
+    const { microformat } = playerResponse
+    // console.log('microformat =', microformat)
+    const { playerMicroformatRenderer } = microformat
+    // console.log('playerMicroformatRenderer =', playerMicroformatRenderer)
+    const { lengthSeconds } = playerMicroformatRenderer
+    // console.log('lengthSeconds =', lengthSeconds)
+    return lengthSeconds
+}
+
 function macroMarkersListItemRendererToChapter(renderer) {
     const title = renderer.title.simpleText
     const timestamp = renderer.timeDescription.simpleText
