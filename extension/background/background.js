@@ -130,7 +130,8 @@ function getTimestampContexts(text, lengthSeconds) {
                 continue
             }
 
-            if (leadingZeroPattern.test(timestamp)) {
+            const leadingZeroMatch = timestamp.match(leadingZeroPattern)
+            if (leadingZeroMatch) {
                 timestamp = leadingZeroMatch.slice(1)
             }                      
 
