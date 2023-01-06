@@ -50,17 +50,24 @@ async function fetchChapters(videoId) {
 
 async function fetchChaptersFromComments(videoResponse) {
     const comments = await youtubei.fetchComments(videoResponse)
-    const pinnedComment = comments.find((comment) => comment.isPinned)
-    if (!pinnedComment) {
-        return []
+    const lengthSeconds = parseInt(youtubei.lengthSecondsFromVideoResponse(videoResponse))
+    const minNumChapters = 2
+    let chapters = []
+
+    for (let i = 0; i < comments.length; i++) {
+        const currentChapters = getTimestampContexts(comments[i].text, lengthSeconds)
+        if (currentChapters.length < minNumChapters) {
+            continue
+        }
+        if (comments[i].isPinned) { // Pinned comment containing chapters has the highest priority
+            return chapters
+        }
+        if (chapters.length < currentChapters.length) { // For ordinary comments, select most numerous chapters 
+            chapters = currentChapters
+        }        
     }
 
-    const lengthSeconds = parseInt(youtubei.lengthSecondsFromVideoResponse(videoResponse))
-    console.log('lengthSeconds =', lengthSeconds)
-    const tsContexts = getTimestampContexts(pinnedComment.text, lengthSeconds)
-    const minNumChapters = 2
-
-    return (tsContexts.length >= minNumChapters) ? tsContexts : []
+    return chapters
 }
 
 function getTimestampContexts(text, lengthSeconds) {
