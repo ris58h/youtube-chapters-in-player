@@ -56,3 +56,9 @@
     text-align: center;
     width: 50%;
 }
+
+.highlighted {
+    color: yellow !important;
+    background-color: gray;
+    opacity: 0.8;
+}
