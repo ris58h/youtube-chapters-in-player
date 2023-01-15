@@ -227,12 +227,8 @@ function toggleChaptersMenuVisibility() {
 
 function toggleChaptersButtonHighlighting() {
     const chapterButtons = document.querySelectorAll('#__youtube-chapters-in-player__button')
-    for (const button of chapterButtons) {
-        if (isChaptersMenuVisible()) {
-            button.classList.add('highlighted')
-        } else {
-            button.classList.remove('highlighted')
-        }    
+    for (const { classList } of chapterButtons) {
+        classList[isChaptersMenuVisible() ? 'add' : 'remove']('highlighted');
     }
 }
 
