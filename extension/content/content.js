@@ -26,6 +26,7 @@ document.addEventListener('click', e => {
     const chapterButton = e.target.closest('#__youtube-chapters-in-player__button')
     if (chapterButton) {
         toggleChaptersMenuVisibility()
+        toggleChaptersButtonHighlighting()
     } else {
         hideChaptersMenu()
     }
@@ -220,6 +221,17 @@ function toggleChaptersMenuVisibility() {
         showChaptersMenu()
         adjustChaptersMenuSize()
         scrollChaptersMenuToCurrentChapter()
+    }
+}
+
+function toggleChaptersButtonHighlighting() {
+    const chapterButtons = document.querySelectorAll('#__youtube-chapters-in-player__button')
+    for (const button of chapterButtons) {
+        if (isChaptersMenuVisible()) {
+            button.classList.add('highlighted')
+        } else {
+            button.classList.remove('highlighted')
+        }    
     }
 }
 
