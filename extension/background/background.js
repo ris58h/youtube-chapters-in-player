@@ -112,8 +112,20 @@ function getTimestampContexts(text, lengthSeconds) {
         // =>
         // ['Линус Торвальдс: программирование ', '1:23:25', 'код ', '01:23:50', 'структуры данных ', '1:25:00', '']           
 
+        // Example 6 (super-abnormal case: kinda-titles both before timestamps and after timestapls):
+        // 'Great video, but the molecule shown at 2:25 was not nitroglycerin but tri nitro toluene (TNT). Also the lattice shown for metallic bonds at 3:53 applies to ionic bonds as well. Small points but otherwise really great stuff!'
+        // =>
+        // ['Great video, but the molecule shown at ', '2:25', 'was not nitroglycerin but tri nitro toluene (TNT). Also the lattice shown for metallic bonds at ', '3:53', 'applies to ionic bonds as well. Small points but otherwise really great stuff! ']           
+
         if (parts.length < 3) {
             continue
+        }
+
+        if (parts[0].length && parts[-1].length) { 
+            // super-abnormal case (which is usually a good candidate for rejection), 
+            // because both normal and abnormal cases should have an empty string
+            // either at the very end or at very beginning of the array of strings
+            continue;
         }
 
         const isTitleBeforeTimestamp = parts[0].trim().length
