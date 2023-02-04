@@ -60,7 +60,7 @@ async function fetchChaptersFromComments(videoResponse) {
             continue
         }
         if (comments[i].isPinned) { // Pinned comment containing chapters has the highest priority
-            return chapters
+            return currentChapters
         }
         if (chapters.length < currentChapters.length) { // For ordinary comments, select most numerous chapters 
             chapters = currentChapters
@@ -121,11 +121,11 @@ function getTimestampContexts(text, lengthSeconds) {
             continue
         }
 
-        if (parts[0].length && parts[-1].length) { 
+        if (parts[0].length && parts[parts.length - 1].length) { 
             // super-abnormal case (which is usually a good candidate for rejection), 
             // because both normal and abnormal cases should have an empty string
             // either at the very end or at very beginning of the array of strings
-            continue;
+            continue
         }
 
         const isTitleBeforeTimestamp = parts[0].trim().length
