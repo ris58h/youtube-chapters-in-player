@@ -67,6 +67,6 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
 
 .highlighted {
     color: yellow !important;
-    background-color: gray;
+    background-color: gray !important;
     opacity: 0.8;
 }
