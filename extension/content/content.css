@@ -2,6 +2,14 @@
     display: none;
 }
 
+/* https://stackoverflow.com/questions/1817792/is-there-a-previous-sibling-selector */
+div.ytp-left-controls > #__youtube-chapters-in-player__button {
+    background-color: unset;
+}
+div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
+    background-color: gray;
+}
+
 .ad-showing #__youtube-chapters-in-player__button {
     display: none;
 }
