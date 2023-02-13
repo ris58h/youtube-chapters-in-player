@@ -13,7 +13,14 @@ async function main() {
 
     let chapters = await fetchChapters(videoId)
 
-    if (videoId !== getVideoId()) {
+    const extractedChapters = await extractChaptersFromPage(videoId)
+
+    if (videoId !== getVideoId() && !extractedChapters.length) {
+        return
+    }
+
+    if (extractedChapters && extractedChapters.length) {
+        createChaptersControls(extractedChapters)
         return
     }
     
@@ -330,4 +337,76 @@ function onLocationHrefChange(callback) {
         }
     })
     observer.observe(document.querySelector("body"), { childList: true, subtree: true })
+}
+
+async function extractChaptersFromPage(videoId) {    
+    // console.log('FUNCTION extractChaptersFromPage')
+    // Example video page: https://www.youtube.com/watch?v=ZclMNu2Me4I
+
+    await sleep(2000)
+    
+    const videoInfoContainer = document.querySelector(
+        'div#content.ytd-expander div#description.ytd-video-secondary-info-renderer'
+    )
+    // console.log('videoInfoContainer =', videoInfoContainer)
+    if (!videoInfoContainer) return []
+
+    const anchors = [...videoInfoContainer.querySelectorAll('a.yt-simple-endpoint')]
+    if (!anchors.length) return []
+    // console.log('anchors =', anchors)
+
+    // Example partial URL: href="/watch?v=ZclMNu2Me4I&amp;t=3150s"
+    // const timestampRegexp = new RegExp(`/watch\\?v=${videoId}&amp;t=(\\d{1,10})s$`)
+
+    // Example full URL: https://www.youtube.com/watch?v=ZclMNu2Me4I&t=4029s
+    const timestampRegexp = new RegExp(`/watch\\?v=${videoId}&t=(\\d{1,10})s$`)
+    // console.log('timestampRegexp =', timestampRegexp)
+
+    /*
+        chapters.push({
+            title,
+            timestamp,
+            time,
+        )     
+    */
+
+    /* Pretty-formatted sample HTML code below */
+    /*
+    <a class="yt-simple-endpoint style-scope yt-formatted-string" spellcheck="false" href="/watch?v=ZclMNu2Me4I&amp;t=2050s" dir="auto">
+        34:10
+    </a>
+    <span dir="auto" class="style-scope yt-formatted-string"> 
+        Что влияет на выбор профессии 
+    </span>
+    */
+    let extractedChapters = []
+
+    for (const anchor of anchors) {
+        const url = anchor.href 
+        // Example timestamp URL: href="/watch?v=ZclMNu2Me4I&amp;t=3150s"
+        const timestampMatch = url.match(timestampRegexp)
+        // console.log('url =', url)
+        if (!timestampMatch) {
+            continue
+        }        
+        const titleElement = anchor.nextElementSibling
+        if (!titleElement || titleElement.tagName !== 'SPAN') continue
+
+        const title = titleElement.innerText.trim()
+        const time = parseInt(timestampMatch[1])
+        const timestamp = anchor.innerText.trim()
+        // console.log('title, time, timestamp =', title, time, timestamp)
+
+        extractedChapters.push({
+            title,
+            timestamp,
+            time,
+        })
+    }
+
+    return extractedChapters
+}
+
+async function sleep(milliseconds) {
+    await new Promise((resolve) => setTimeout(resolve, milliseconds))
 }
