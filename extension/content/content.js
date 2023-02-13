@@ -340,7 +340,7 @@ function onLocationHrefChange(callback) {
 }
 
 async function extractChaptersFromPage(videoId) {    
-    console.log('FUNCTION extractChaptersFromPage')
+    // console.log('FUNCTION extractChaptersFromPage')
     // Example video page: https://www.youtube.com/watch?v=ZclMNu2Me4I
 
     await sleep(2000)
@@ -348,12 +348,12 @@ async function extractChaptersFromPage(videoId) {
     const videoInfoContainer = document.querySelector(
         'div#content.ytd-expander div#description.ytd-video-secondary-info-renderer'
     )
-    console.log('videoInfoContainer =', videoInfoContainer)
+    // console.log('videoInfoContainer =', videoInfoContainer)
     if (!videoInfoContainer) return []
 
     const anchors = [...videoInfoContainer.querySelectorAll('a.yt-simple-endpoint')]
     if (!anchors.length) return []
-    console.log('anchors =', anchors)
+    // console.log('anchors =', anchors)
 
     // Example partial URL: href="/watch?v=ZclMNu2Me4I&amp;t=3150s"
     // const timestampRegexp = new RegExp(`/watch\\?v=${videoId}&amp;t=(\\d{1,10})s$`)
@@ -387,7 +387,7 @@ async function extractChaptersFromPage(videoId) {
 
     for (const anchor of anchors) {
         const url = anchor.href 
-        console.log('url =', url)
+        // console.log('url =', url)
 
         // const url = new URL(anchor.href)
         // const urlSearchParams = new URLSearchParams(url.searchParams)
@@ -401,16 +401,16 @@ async function extractChaptersFromPage(videoId) {
         if (!timestampMatch) continue
 
         const titleElement = anchor.nextElementSibling
-        console.log('titleElement =', titleElement)
+        // console.log('titleElement =', titleElement)
         if (!titleElement || titleElement.tagName !== 'SPAN') continue
 
         const title = titleElement.innerText.trim()
-        console.log('title =', title)
+        // console.log('title =', title)
         if (!title.length) continue
 
         const time = parseInt(timestampMatch[1])
         const timestamp = anchor.innerText.trim()
-        console.log('title, time, timestamp =', title, time, timestamp)
+        // console.log('title, time, timestamp =', title, time, timestamp)
 
         extractedChapters.push({
             title,
