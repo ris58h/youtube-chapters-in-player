@@ -340,7 +340,7 @@ function onLocationHrefChange(callback) {
 }
 
 async function extractChaptersFromPage(videoId) {    
-    // console.log('FUNCTION extractChaptersFromPage')
+    console.log('FUNCTION extractChaptersFromPage')
     // Example video page: https://www.youtube.com/watch?v=ZclMNu2Me4I
 
     await sleep(2000)
@@ -348,18 +348,22 @@ async function extractChaptersFromPage(videoId) {
     const videoInfoContainer = document.querySelector(
         'div#content.ytd-expander div#description.ytd-video-secondary-info-renderer'
     )
-    // console.log('videoInfoContainer =', videoInfoContainer)
+    console.log('videoInfoContainer =', videoInfoContainer)
     if (!videoInfoContainer) return []
 
     const anchors = [...videoInfoContainer.querySelectorAll('a.yt-simple-endpoint')]
     if (!anchors.length) return []
-    // console.log('anchors =', anchors)
+    console.log('anchors =', anchors)
 
     // Example partial URL: href="/watch?v=ZclMNu2Me4I&amp;t=3150s"
     // const timestampRegexp = new RegExp(`/watch\\?v=${videoId}&amp;t=(\\d{1,10})s$`)
 
-    // Example full URL: https://www.youtube.com/watch?v=ZclMNu2Me4I&t=4029s
-    const timestampRegexp = new RegExp(`/watch\\?v=${videoId}&t=(\\d{1,10})s$`)
+    // Example full URLs: 
+    // https://www.youtube.com/watch?v=ZclMNu2Me4I&t=4029s
+    // https://www.youtube.com/watch?v=ZclMNu2Me4I&list=WL&index=24&t=35s
+    // const timestampRegexp = new RegExp(`/watch\\?v=${videoId}&t=(\\d{1,10})s$`)
+    const timestampRegexp = new RegExp(
+        `/watch\\?v=${videoId}.*&t=(\\d{1,10})s(?:&|$)`)
     // console.log('timestampRegexp =', timestampRegexp)
 
     /*
@@ -383,19 +387,30 @@ async function extractChaptersFromPage(videoId) {
 
     for (const anchor of anchors) {
         const url = anchor.href 
+        console.log('url =', url)
+
+        // const url = new URL(anchor.href)
+        // const urlSearchParams = new URLSearchParams(url.searchParams)
+        // console.log('urlSearchParams =', urlSearchParams)
+        // const entries = urlSearchParams.entries()
+        // const secondsEntry = entries.find(([key, value]) => key === 't')
+        // if (!secondsEntry) return
+
         // Example timestamp URL: href="/watch?v=ZclMNu2Me4I&amp;t=3150s"
         const timestampMatch = url.match(timestampRegexp)
-        // console.log('url =', url)
-        if (!timestampMatch) {
-            continue
-        }        
+        if (!timestampMatch) continue
+
         const titleElement = anchor.nextElementSibling
+        console.log('titleElement =', titleElement)
         if (!titleElement || titleElement.tagName !== 'SPAN') continue
 
         const title = titleElement.innerText.trim()
+        console.log('title =', title)
+        if (!title.length) continue
+
         const time = parseInt(timestampMatch[1])
         const timestamp = anchor.innerText.trim()
-        // console.log('title, time, timestamp =', title, time, timestamp)
+        console.log('title, time, timestamp =', title, time, timestamp)
 
         extractedChapters.push({
             title,
