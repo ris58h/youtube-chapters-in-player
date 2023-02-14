@@ -24,7 +24,8 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
     bottom: 61px;
     z-index: 71;
 
-    width: 480px;
+    /* width: 480px; */
+    width: 100%;
     min-width: 250px;
     max-width: calc(100% - 12px - 12px);
     max-height: calc(100% - 12px - 61px);
@@ -69,4 +70,8 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
     color: yellow !important;
     background-color: gray !important;
     opacity: 0.8;
+}
+
+.ytp-menuitem-label, .ytp-menuitem-icon, .ytp-menuitem-content {
+    padding: 0 4px;
 }
