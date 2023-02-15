@@ -184,22 +184,22 @@ function createChaptersMenu(chapters) {
 
 function toChapterElement(chapter) {
     const itemElement = document.createElement('div')
-    itemElement.classList.add('ytp-menuitem')
+    itemElement.classList.add('ytp-menuitem', 'chapters-menuitem')
     itemElement.addEventListener('click', e => {
         getVideo().currentTime = chapter.time
     })
 
     const iconElement = document.createElement('div')
-    iconElement.classList.add('ytp-menuitem-icon')
+    iconElement.classList.add('ytp-menuitem-icon', 'chapters-icon')
     itemElement.appendChild(iconElement)
 
     const contentElement = document.createElement('div')
-    contentElement.classList.add('ytp-menuitem-content')
+    contentElement.classList.add('ytp-menuitem-content', 'chapters-content')
     contentElement.textContent = chapter.timestamp
     itemElement.appendChild(contentElement)
 
     const labelElement = document.createElement('div')
-    labelElement.classList.add('ytp-menuitem-label')
+    labelElement.classList.add('ytp-menuitem-label', 'chapters-label')
     labelElement.textContent = chapter.title
     itemElement.appendChild(labelElement)
 
