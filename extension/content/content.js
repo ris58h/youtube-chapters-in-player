@@ -147,7 +147,7 @@ function createChaptersMenu(chapters) {
     const prevChapterButton = document.createElement('button')
     prevChapterButton.id = '__youtube-chapters-in-player__menu__buttons__prev'
     prevChapterButton.classList.add('ytp-button')
-    prevChapterButton.classList.add('ytp-menuitem')
+    // prevChapterButton.classList.add('ytp-menuitem')
     prevChapterButton.textContent = '<'
     prevChapterButton.addEventListener('click', e => {
         const chapterIndex = getCurrentChapterIndex(chapters)
@@ -162,7 +162,7 @@ function createChaptersMenu(chapters) {
     const nextChapterButton = document.createElement('button')
     nextChapterButton.id = '__youtube-chapters-in-player__menu__buttons__next'
     nextChapterButton.classList.add('ytp-button')
-    nextChapterButton.classList.add('ytp-menuitem')
+    // nextChapterButton.classList.add('ytp-menuitem')
     nextChapterButton.textContent = '>'
     nextChapterButton.addEventListener('click', e => {
         const chapterIndex = getCurrentChapterIndex(chapters)
@@ -186,15 +186,20 @@ function toChapterElement(chapter) {
     iconElement.classList.add('ytp-menuitem-icon')
     itemElement.appendChild(iconElement)
 
+    const contentElement = document.createElement('div')
+    contentElement.classList.add('ytp-menuitem-content')
+    contentElement.textContent = chapter.timestamp
+    itemElement.appendChild(contentElement)
+
     const labelElement = document.createElement('div')
     labelElement.classList.add('ytp-menuitem-label')
     labelElement.textContent = chapter.title
     itemElement.appendChild(labelElement)
 
-    const contentElement = document.createElement('div')
-    contentElement.classList.add('ytp-menuitem-content')
-    contentElement.textContent = chapter.timestamp
-    itemElement.appendChild(contentElement)
+    // const contentElement = document.createElement('div')
+    // contentElement.classList.add('ytp-menuitem-content')
+    // contentElement.textContent = chapter.timestamp
+    // itemElement.appendChild(contentElement)
 
     return itemElement
 }

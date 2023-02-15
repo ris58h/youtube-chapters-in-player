@@ -73,6 +73,34 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
     opacity: 0.8;
 }
 
+.ytp-panel-menu {
+    display: block !important;
+}
+
+.ytp-menuitem {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start;
+
+    height: 30px !important;
+}
+
 .ytp-menuitem-label, .ytp-menuitem-icon, .ytp-menuitem-content {
     padding: 0 4px !important;
+    vertical-align: text-top !important;
+}
+
+.ytp-menuitem-icon {
+    justify-self: flex-start !important;
+    flex: 1rem 0 0 !important;
+}
+
+.ytp-menuitem-content {
+    justify-self: flex-end !important;
+    flex: 5rem 0 0 !important;
+}
+
+.ytp-menuitem-label {
+    justify-self: flex-start !important;
+    flex: 100% 0 0 !important;
 }
