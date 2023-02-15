@@ -1,7 +1,7 @@
 main()
 
-onLocationHrefChange(() => {
-    removeChaptersControls()
+onLocationHrefChange(async () => {
+    await removeChaptersControls()
     main()
 })
 
@@ -11,9 +11,16 @@ async function main() {
         return
     }
 
-    let chapters = await fetchChapters(videoId)
+    const chaptersPromise = fetchChapters(videoId)
+    const extractedChaptersPromise = extractChaptersFromPage(videoId)
 
-    const extractedChapters = await extractChaptersFromPage(videoId)
+    const [chapters, extractedChapters] = await Promise.all([
+        chaptersPromise,
+        extractedChaptersPromise,
+    ])
+
+    // console.log('chapters =', chapters)
+    // console.log('extractedChapters =', extractedChapters)
 
     if (videoId !== getVideoId() && !extractedChapters.length) {
         return
@@ -58,9 +65,9 @@ function createChaptersControls(chapters) {
     getVideo().addEventListener('timeupdate', timeupdateListener)
 }
 
-function removeChaptersControls() {
+async function removeChaptersControls() {
     removeChaptersButton()
-    removeChaptersMenu()
+    await removeChaptersMenu()
 
     if (timeupdateListener) {
         const video = getVideo()
@@ -220,10 +227,22 @@ function selectChaptersMenuItemAtIndex(chapterIndex) {
     }
 }
 
-function removeChaptersMenu() {
-    let chaptersMenu = getChaptersMenu()
+async function removeChaptersMenu() {
+    let chaptersMenu = null
+
+    for (let i = 0; i < 200; i++) {
+        chaptersMenu = getChaptersMenu()
+        if (chaptersMenu) break
+        await sleep(100)
+    }
+
+    // console.log('BEFORE REMOVAL: chaptersMenu =', chaptersMenu)
+
     if (chaptersMenu) {
         chaptersMenu.remove()
+        
+        chaptersMenu = getChaptersMenu()
+        // console.log('AFTER REMOVAL: chaptersMenu =', chaptersMenu)
     }
 }
 
