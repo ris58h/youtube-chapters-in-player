@@ -37,7 +37,8 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
     left: 24px;
     bottom: 70px;
 
-    width: 640px;
+    /* width: 640px; */
+    width: 1280px;
     max-width: calc(100% - 24px - 24px);
     max-height: calc(100% - 24px - 70px);
 }
@@ -73,5 +74,5 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
 }
 
 .ytp-menuitem-label, .ytp-menuitem-icon, .ytp-menuitem-content {
-    padding: 0 4px;
+    padding: 0 4px !important;
 }
