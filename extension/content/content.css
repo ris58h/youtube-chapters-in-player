@@ -40,6 +40,7 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
     display: flex;
     flex-flow: column;
 }
+
 .ytp-big-mode #__youtube-chapters-in-player__menu {
     left: 24px;
     bottom: 70px;
@@ -53,6 +54,22 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
     max-height: calc(100% - 24px - 70px);
 }
 
+/* <div id="player-theater-container" class="style-scope ytd-watch-flexy"> */
+
+#player-theater-container #__youtube-chapters-in-player__menu {
+    left: 24px;
+    bottom: 70px;
+
+    /* height: calc(100% - 24px - 70px) !important; */
+    height: 80% !important;
+
+    /* width: 640px; */
+    width: 1280px;
+    /* max-width: calc(100% - 24px - 24px); */
+    max-width: 75% !important;
+    max-height: calc(100% - 24px - 70px);
+}
+
 #__youtube-chapters-in-player__menu .ytp-panel {
     width: 100%;
     height: 100%;
@@ -63,10 +80,12 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
     position: static;
 }
 
-#__youtube-chapters-in-player__menu .ytp-menuitem[aria-checked=true] {
+#__youtube-chapters-in-player__menu .chapters-menuitem[aria-checked=true] {
     background-color: rgba(255, 255, 255, .1)
 }
-#__youtube-chapters-in-player__menu .ytp-menuitem[aria-checked=true] .ytp-menuitem-icon::before {
+
+#__youtube-chapters-in-player__menu 
+    .chapters-menuitem[aria-checked=true] .chapters-icon::before {
     content: '•';
     font-weight: bold;
 }
@@ -95,10 +114,11 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
     overflow-y: scroll !important;
 }
 
-.ytp-menuitem.chapters-menu {
+.chapters-menuitem {
     display: flex !important;
     flex-direction: row !important;
-    align-items: flex-start !important;
+    align-items: start !important;
+    justify-content: start !important;
 
     height: 30px !important;
     padding: 4px 0 0 0 !important;
@@ -106,66 +126,76 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
 
 .ytp-big-mode .ytp-panel 
     > .ytp-panel-menu 
-    > .ytp-menuitem.chapters-menuitem {
+    > .chapters-menuitem {
     display: flex !important;
     flex-direction: row !important;
-    align-items: flex-start !important;
+    align-items: start !important;
+    justify-content: start !important;
 
     height: 40px !important;
     padding: 4px 0 0 0 !important;
 }
 
-.ytp-menuitem-label.chapters-label, 
-.ytp-menuitem-icon.chapters-icon, 
-.ytp-menuitem-content.chapters-content {
+.chapters-label, 
+.chapters-icon, 
+.chapters-content {
     padding: 0 4px !important;
     vertical-align: text-top !important;
 }
 
 .ytp-big-mode 
-    .ytp-menuitem-label.chapters-label, 
-    .ytp-menuitem-icon.chapters-icon, 
-    .ytp-menuitem-content.chapters-content {
+    .chapters-label, 
+    .chapters-icon, 
+    .chapters-content {
     padding: 0 4px !important;
     vertical-align: text-top !important;
 }
 
-.ytp-menuitem-icon.chapters-icon {
-    justify-self: flex-start !important;
+.chapters-icon {
+    /* justify-self: start !important; */
     flex: 1.5rem 0 0 !important;
 }
 
-.ytp-menuitem-content.chapters-content {
-    justify-self: flex-end !important;
+.chapters-content {
+    /* justify-self: end !important; */
     flex: 5rem 0 0 !important;
+    /* margin: 0 0 0 auto; */
+    text-align: right;
 }
 
-.ytp-menuitem-label.chapters-label {
-    justify-self: flex-start !important;
+.chapters-label {
+    /* justify-self: start !important; */
 }
 
 .ytp-big-mode .ytp-panel 
     > .ytp-panel-menu 
-    > .ytp-menuitem.chapters-menuitem 
-    > .ytp-menuitem-icon.chapters-icon {
+    > .chapters-menuitem 
+    > .chapters-icon {
     display: unset !important;
-    justify-self: flex-start !important;
+    /* justify-self: start !important; */
     flex: 2rem 0 0 !important;
 }
 
 .ytp-big-mode .ytp-panel 
     > .ytp-panel-menu 
-    > .ytp-menuitem.chapters-menuitem
-    > .ytp-menuitem-content.chapters-content {
+    > .chapters-menuitem
+    > .chapters-content {
     display: unset !important;
     flex: 8rem 0 0 !important;
+    /* margin: 0 0 0 auto; */
+    text-align: right;
 }
 
 .ytp-big-mode .ytp-panel 
     > .ytp-panel-menu 
-    > .ytp-menuitem.chapters-menuitem
-    > .ytp-menuitem-label.chapters-label {
+    > .chapters-menuitem
+    > .chapters-label {
     display: unset !important;
-    justify-self: flex-start !important;
+    /* justify-self: start !important; */
 }
 
+.chapters-menuitem:hover {
+    /* opacity: 0.2; */
+    background-color: blue !important;
+    color: yellow;
+}

@@ -184,22 +184,22 @@ function createChaptersMenu(chapters) {
 
 function toChapterElement(chapter) {
     const itemElement = document.createElement('div')
-    itemElement.classList.add('ytp-menuitem', 'chapters-menuitem')
+    itemElement.classList.add('chapters-menuitem')
     itemElement.addEventListener('click', e => {
         getVideo().currentTime = chapter.time
     })
 
     const iconElement = document.createElement('div')
-    iconElement.classList.add('ytp-menuitem-icon', 'chapters-icon')
+    iconElement.classList.add('chapters-icon')
     itemElement.appendChild(iconElement)
 
     const contentElement = document.createElement('div')
-    contentElement.classList.add('ytp-menuitem-content', 'chapters-content')
+    contentElement.classList.add('chapters-content')
     contentElement.textContent = chapter.timestamp
     itemElement.appendChild(contentElement)
 
     const labelElement = document.createElement('div')
-    labelElement.classList.add('ytp-menuitem-label', 'chapters-label')
+    labelElement.classList.add('chapters-label')
     labelElement.textContent = chapter.title
     itemElement.appendChild(labelElement)
 
@@ -216,7 +216,8 @@ function selectChaptersMenuItemAtIndex(chapterIndex) {
     if (!chaptersMenu) {
         return
     }
-    const menuItems = chaptersMenu.querySelectorAll('.ytp-menuitem')
+    // const menuItems = chaptersMenu.querySelectorAll('.ytp-menuitem')
+    const menuItems = chaptersMenu.querySelectorAll('.chapters-menuitem')
     for (let i = 0; i < menuItems.length; i++) {
         const menuItem = menuItems[i]
         if (i === chapterIndex) {
@@ -297,7 +298,9 @@ function scrollChaptersMenuToCurrentChapter() {
     if (!chaptersMenu) {
         return
     }
-    const menuItem = chaptersMenu.querySelector('.ytp-menuitem[aria-checked="true"]')
+    // const menuItem = chaptersMenu.querySelector('.ytp-menuitem[aria-checked="true"]')
+    const menuItem = chaptersMenu.querySelector(
+        '.chapters-menuitem[aria-checked="true"]')
     if (menuItem && menuItem.offsetParent !== null) {
         const panel = chaptersMenu.querySelector('.ytp-panel')
         panel.scrollTop = menuItem.offsetTop
