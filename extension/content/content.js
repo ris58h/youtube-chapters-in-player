@@ -19,9 +19,6 @@ async function main() {
         extractedChaptersPromise,
     ])
 
-    // console.log('chapters =', chapters)
-    // console.log('extractedChapters =', extractedChapters)
-
     if (videoId !== getVideoId() && !extractedChapters.length) {
         return
     }
@@ -86,7 +83,9 @@ function createChaptersButton(chapters) {
     const chaptersContainer = document.createElement('div')
     chaptersContainer.id = '__youtube-chapters-in-player__button'
     chaptersContainer.classList.add('ytp-chapter-container')
-    document.querySelector('#movie_player .ytp-left-controls').appendChild(chaptersContainer)
+    document
+        .querySelector('#movie_player .ytp-left-controls')
+        .appendChild(chaptersContainer)
 
     const button = document.createElement('button')
     button.classList.add('ytp-button')
@@ -107,7 +106,8 @@ function createChaptersButton(chapters) {
 }
 
 function setChaptersMenuButtonText(text) {
-    let buttonContent = document.querySelector('#__youtube-chapters-in-player__button .ytp-chapter-title-content')
+    let buttonContent = document.querySelector(
+        '#__youtube-chapters-in-player__button .ytp-chapter-title-content')
     if (buttonContent) {
         buttonContent.textContent = text ? text : 'Chapters'
     }
@@ -154,7 +154,6 @@ function createChaptersMenu(chapters) {
     const prevChapterButton = document.createElement('button')
     prevChapterButton.id = '__youtube-chapters-in-player__menu__buttons__prev'
     prevChapterButton.classList.add('ytp-button')
-    // prevChapterButton.classList.add('ytp-menuitem')
     prevChapterButton.textContent = '<'
     prevChapterButton.addEventListener('click', e => {
         const chapterIndex = getCurrentChapterIndex(chapters)
@@ -169,7 +168,6 @@ function createChaptersMenu(chapters) {
     const nextChapterButton = document.createElement('button')
     nextChapterButton.id = '__youtube-chapters-in-player__menu__buttons__next'
     nextChapterButton.classList.add('ytp-button')
-    // nextChapterButton.classList.add('ytp-menuitem')
     nextChapterButton.textContent = '>'
     nextChapterButton.addEventListener('click', e => {
         const chapterIndex = getCurrentChapterIndex(chapters)
@@ -203,11 +201,6 @@ function toChapterElement(chapter) {
     labelElement.textContent = chapter.title
     itemElement.appendChild(labelElement)
 
-    // const contentElement = document.createElement('div')
-    // contentElement.classList.add('ytp-menuitem-content')
-    // contentElement.textContent = chapter.timestamp
-    // itemElement.appendChild(contentElement)
-
     return itemElement
 }
 
@@ -216,7 +209,6 @@ function selectChaptersMenuItemAtIndex(chapterIndex) {
     if (!chaptersMenu) {
         return
     }
-    // const menuItems = chaptersMenu.querySelectorAll('.ytp-menuitem')
     const menuItems = chaptersMenu.querySelectorAll('.chapters-menuitem')
     for (let i = 0; i < menuItems.length; i++) {
         const menuItem = menuItems[i]
@@ -231,19 +223,15 @@ function selectChaptersMenuItemAtIndex(chapterIndex) {
 async function removeChaptersMenu() {
     let chaptersMenu = null
 
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 100; i++) {
         chaptersMenu = getChaptersMenu()
         if (chaptersMenu) break
         await sleep(100)
     }
 
-    // console.log('BEFORE REMOVAL: chaptersMenu =', chaptersMenu)
-
     if (chaptersMenu) {
         chaptersMenu.remove()
-        
         chaptersMenu = getChaptersMenu()
-        // console.log('AFTER REMOVAL: chaptersMenu =', chaptersMenu)
     }
 }
 
@@ -289,7 +277,9 @@ function adjustChaptersMenuSize() {
         return
     }
     const menuHeight = chaptersMenu.querySelector('.ytp-panel-menu').clientHeight
-    const buttonsHeight = chaptersMenu.querySelector('#__youtube-chapters-in-player__menu__buttons').clientHeight
+    const buttonsHeight = chaptersMenu
+        .querySelector('#__youtube-chapters-in-player__menu__buttons')
+        .clientHeight
     chaptersMenu.style.height = (menuHeight + buttonsHeight) + 'px'
 }
 
@@ -298,7 +288,6 @@ function scrollChaptersMenuToCurrentChapter() {
     if (!chaptersMenu) {
         return
     }
-    // const menuItem = chaptersMenu.querySelector('.ytp-menuitem[aria-checked="true"]')
     const menuItem = chaptersMenu.querySelector(
         '.chapters-menuitem[aria-checked="true"]')
     if (menuItem && menuItem.offsetParent !== null) {
@@ -367,7 +356,6 @@ function onLocationHrefChange(callback) {
 }
 
 async function extractChaptersFromPage(videoId) {    
-    // console.log('FUNCTION extractChaptersFromPage')
     // Example video page: https://www.youtube.com/watch?v=ZclMNu2Me4I
 
     await sleep(2000)
@@ -375,12 +363,10 @@ async function extractChaptersFromPage(videoId) {
     const videoInfoContainer = document.querySelector(
         'div#content.ytd-expander div#description.ytd-video-secondary-info-renderer'
     )
-    // console.log('videoInfoContainer =', videoInfoContainer)
     if (!videoInfoContainer) return []
 
     const anchors = [...videoInfoContainer.querySelectorAll('a.yt-simple-endpoint')]
     if (!anchors.length) return []
-    // console.log('anchors =', anchors)
 
     // Example partial URL: href="/watch?v=ZclMNu2Me4I&amp;t=3150s"
     // const timestampRegexp = new RegExp(`/watch\\?v=${videoId}&amp;t=(\\d{1,10})s$`)
@@ -391,15 +377,6 @@ async function extractChaptersFromPage(videoId) {
     // const timestampRegexp = new RegExp(`/watch\\?v=${videoId}&t=(\\d{1,10})s$`)
     const timestampRegexp = new RegExp(
         `/watch\\?v=${videoId}.*&t=(\\d{1,10})s(?:&|$)`)
-    // console.log('timestampRegexp =', timestampRegexp)
-
-    /*
-        chapters.push({
-            title,
-            timestamp,
-            time,
-        )     
-    */
 
     /* Pretty-formatted sample HTML code below */
     /*
@@ -428,17 +405,14 @@ async function extractChaptersFromPage(videoId) {
         if (!timestampMatch) continue
 
         const titleElement = anchor.nextElementSibling
-        // console.log('titleElement =', titleElement)
         if (!titleElement || titleElement.tagName !== 'SPAN') continue
 
         const title = titleElement.innerText.trim()
-        // console.log('title =', title)
         if (!title.length) continue
 
         const time = parseInt(timestampMatch[1])
         const timestamp = anchor.innerText.trim()
-        // console.log('title, time, timestamp =', title, time, timestamp)
-
+ 
         extractedChapters.push({
             title,
             timestamp,

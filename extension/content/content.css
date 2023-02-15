@@ -28,10 +28,8 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
     bottom: 61px;
     z-index: 71;
 
-    /* height: 100%; */
     height: calc(100% - 12px - 61px - 20px);
     max-height: calc(100% - 12px - 61px);
-    /* width: 480px; */
     width: 100%;
     min-width: 250px;
     max-width: calc(100% - 12px - 12px);
@@ -45,27 +43,18 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
     left: 24px;
     bottom: 70px;
 
-    /* height: calc(100% - 24px - 70px) !important; */
     height: 80% !important;
-
-    /* width: 640px; */
     width: 1280px;
     max-width: calc(100% - 24px - 24px);
     max-height: calc(100% - 24px - 70px);
 }
 
-/* <div id="player-theater-container" class="style-scope ytd-watch-flexy"> */
-
 #player-theater-container #__youtube-chapters-in-player__menu {
     left: 24px;
     bottom: 70px;
 
-    /* height: calc(100% - 24px - 70px) !important; */
     height: 80% !important;
-
-    /* width: 640px; */
     width: 1280px;
-    /* max-width: calc(100% - 24px - 24px); */
     max-width: 75% !important;
     max-height: calc(100% - 24px - 70px);
 }
@@ -73,9 +62,6 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
 #__youtube-chapters-in-player__menu .ytp-panel {
     width: 100%;
     height: 100%;
-    /* height: calc(100% - 20px); */
-    /* max-height: calc(100% - 20px); */
-    /* overflow-y: scroll; */
 
     position: static;
 }
@@ -107,7 +93,6 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
 
 .ytp-panel-menu {
     display: block !important;
-    /* padding: 8px 0 !important; */
 
     width: 100% !important;
     height: 100% !important;
@@ -124,9 +109,7 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
     padding: 4px 0 0 0 !important;
 }
 
-.ytp-big-mode .ytp-panel 
-    > .ytp-panel-menu 
-    > .chapters-menuitem {
+.ytp-big-mode .ytp-panel > .ytp-panel-menu > .chapters-menuitem {
     display: flex !important;
     flex-direction: row !important;
     align-items: start !important;
@@ -152,50 +135,30 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
 }
 
 .chapters-icon {
-    /* justify-self: start !important; */
     flex: 1.5rem 0 0 !important;
 }
 
 .chapters-content {
-    /* justify-self: end !important; */
     flex: 5rem 0 0 !important;
-    /* margin: 0 0 0 auto; */
     text-align: right;
 }
 
-.chapters-label {
-    /* justify-self: start !important; */
-}
-
-.ytp-big-mode .ytp-panel 
-    > .ytp-panel-menu 
-    > .chapters-menuitem 
-    > .chapters-icon {
+.ytp-big-mode .ytp-panel > .ytp-panel-menu > .chapters-menuitem > .chapters-icon {
     display: unset !important;
-    /* justify-self: start !important; */
     flex: 2rem 0 0 !important;
 }
 
-.ytp-big-mode .ytp-panel 
-    > .ytp-panel-menu 
-    > .chapters-menuitem
-    > .chapters-content {
+.ytp-big-mode .ytp-panel > .ytp-panel-menu > .chapters-menuitem > .chapters-content {
     display: unset !important;
     flex: 8rem 0 0 !important;
-    /* margin: 0 0 0 auto; */
     text-align: right;
 }
 
-.ytp-big-mode .ytp-panel 
-    > .ytp-panel-menu 
-    > .chapters-menuitem
-    > .chapters-label {
+.ytp-big-mode .ytp-panel > .ytp-panel-menu > .chapters-menuitem > .chapters-label {
     display: unset !important;
-    /* justify-self: start !important; */
 }
 
 .chapters-menuitem:hover {
-    /* opacity: 0.2; */
     background-color: blue !important;
     color: yellow;
 }
