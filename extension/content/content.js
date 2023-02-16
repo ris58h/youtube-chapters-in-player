@@ -431,14 +431,18 @@ Support the channel by becoming a Patron today! 👉
         if (!title.length) continue
 
         // Remove repeating characters (except for letters and whitespaces)
-        const titleFirstPart = title.split(/[^a-zA-Zа-яА-ЯёЁ\s]{10,}/)[0]
+        let titleFirstPart = title.split(/[^a-zA-Zа-яА-ЯёЁ\s]{10,}/)[0]
         // console.log('titleFirstPart =', titleFirstPart)
+
+        // Remove a dash in the beginning
+        const noDashMatch = titleFirstPart.match(/^\s*[-–—]\s*(.+)$/)
+        const noDashTitle = noDashMatch ? noDashMatch[1] : titleFirstPart
 
         const time = parseInt(timestampMatch[1])
         const timestamp = anchor.innerText.trim()
  
         extractedChapters.push({
-            title: titleFirstPart,
+            title: noDashTitle,
             timestamp,
             time,
         })
