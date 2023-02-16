@@ -38,14 +38,22 @@ function setUpWebRequestOriginRemoval() {
 
 async function fetchChapters(videoId) {
     const videoResponse = await youtubei.fetchVideo(videoId)
-    let chapters = youtubei.chaptersFromVideoResponse(videoResponse)
+    const videoResponseChapters = youtubei.chaptersFromVideoResponse(videoResponse)
 
     const commentChapters = await fetchChaptersFromComments(videoResponse)
 
-    if (chapters.length > commentChapters.length) {
-        return chapters
+    if (videoResponseChapters.length > commentChapters.length) {
+        // return chapters
+        return {
+            chaptersType: 'video_response',
+            chapters: videoResponseChapters,
+        }        
     }
-    return commentChapters
+    // return commentChapters
+    return {
+        chaptersType: 'comments',
+        chapters: commentChapters,
+    }
 }
 
 async function fetchChaptersFromComments(videoResponse) {

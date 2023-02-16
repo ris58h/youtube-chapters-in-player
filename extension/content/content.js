@@ -11,25 +11,24 @@ async function main() {
         return
     }
 
-    const chaptersPromise = fetchChapters(videoId)
+    const fetchedChaptersPromise = fetchChapters(videoId)
     const extractedChaptersPromise = extractChaptersFromPage(videoId)
 
-    const [chapters, extractedChapters] = await Promise.all([
-        chaptersPromise,
+    const [fetchedChapters, extractedChapters] = await Promise.all([
+        fetchedChaptersPromise,
         extractedChaptersPromise,
     ])
 
-    if (videoId !== getVideoId() && !extractedChapters.length) {
+    if (videoId !== getVideoId()) {
         return
     }
 
-    if (extractedChapters && extractedChapters.length) {
-        createChaptersControls(extractedChapters)
-        return
-    }
-    
-    if (chapters && chapters.length > 0) {
-        createChaptersControls(chapters)
+    if (fetchedChapters?.chaptersType === 'video_response') {
+        createChaptersControls(fetchedChapters.chapters)
+    } else if (extractedChapters?.chapters?.length) {
+        createChaptersControls(extractedChapters.chapters)
+    } else if (fetchedChapters?.chapters?.length > 0) {
+        createChaptersControls(fetchedChapters.chapters)
     }
 }
 
@@ -448,7 +447,11 @@ Support the channel by becoming a Patron today! 👉
         })
     }
 
-    return extractedChapters
+    // return extractedChapters
+    return {
+        chaptersType: 'extracted',
+        chapters: extractedChapters,
+    }
 }
 
 async function sleep(milliseconds) {
