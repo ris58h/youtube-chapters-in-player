@@ -111,7 +111,7 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
     align-items: start !important;
     justify-content: start !important;
 
-    height: 40px !important;
+    height: 35px !important;
     padding: 4px 0 0 0 !important;
 }
 
@@ -120,6 +120,8 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
 .chapters-content {
     padding: 0 4px !important;
     vertical-align: text-top !important;
+
+    font-size: 14px !important;
 }
 
 .ytp-big-mode 
@@ -128,6 +130,19 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
     .chapters-content {
     padding: 0 4px !important;
     vertical-align: text-top !important;
+
+    font-size: 18px !important;
+}
+
+#player-theater-container .chapters-menuitem {
+    height: 30px !important;
+}
+
+#player-theater-container 
+.chapters-label, 
+.chapters-icon, 
+.chapters-content {
+    font-size: 14px !important;
 }
 
 .chapters-icon {
