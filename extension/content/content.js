@@ -356,7 +356,27 @@ function onLocationHrefChange(callback) {
 }
 
 async function extractChaptersFromPage(videoId) {    
-    // Example video page: https://www.youtube.com/watch?v=ZclMNu2Me4I
+    // Example video pages: 
+    // https://www.youtube.com/watch?v=ZclMNu2Me4I
+    // https://www.youtube.com/watch?v=gqymqN02_9U
+
+// Need to somehow detect chapters-end
+/*
+– Contents of this video --------------------------------
+00:00 - Guyana’s Economy
+00:56 - The Fastest Growing Economy in the World
+03:22 - The Sugar Economy 
+05:42 - Flawed Independence
+07:31 - Socialist Cooperative Republic
+11:44 - Let there be Oil
+13:44 - The Oil Curse
+15:33 - How Guyana Plans to Get Insanely Rich in Just 5 years
+18:21 - Will Guyana Succeed?
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+CASUAL SCHOLAR IS MADE POSSIBLE BY OUR PATREON COMMUNITY!
+Support the channel by becoming a Patron today! 👉
+*/
 
     await sleep(2000)
     
@@ -410,11 +430,15 @@ async function extractChaptersFromPage(videoId) {
         const title = titleElement.innerText.trim()
         if (!title.length) continue
 
+        // Remove repeating characters (except for letters and whitespaces)
+        const titleFirstPart = title.split(/[^a-zA-Zа-яА-ЯёЁ\s]{10,}/)[0]
+        // console.log('titleFirstPart =', titleFirstPart)
+
         const time = parseInt(timestampMatch[1])
         const timestamp = anchor.innerText.trim()
  
         extractedChapters.push({
-            title,
+            title: titleFirstPart,
             timestamp,
             time,
         })
