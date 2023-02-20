@@ -23,6 +23,10 @@ async function main() {
         return
     }
 
+    if (!fetchedChapters && !extractedChapters) {
+        return
+    }
+
     if (fetchedChapters?.chaptersType === 'video_response') {
         createChaptersControls(fetchedChapters.chapters)
     } else if (extractedChapters?.chapters?.length) {
@@ -30,6 +34,30 @@ async function main() {
     } else if (fetchedChapters?.chapters?.length > 0) {
         createChaptersControls(fetchedChapters.chapters)
     }
+
+    const ytpLeftControls = document.querySelector('div.ytp-left-controls')
+    if (!ytpLeftControls) return
+
+    ytpLeftControls.addEventListener('mouseenter', (event) => {
+        const chaptersButtons = [
+            ...document.querySelectorAll('#__youtube-chapters-in-player__button')]
+        if (chaptersButtons.length) {
+            for (const button of chaptersButtons) {
+                button.style.backgroundColor = 'gray';
+            }
+        }
+    })
+
+    ytpLeftControls.addEventListener('mouseleave', (event) => {
+        const chaptersButtons = [
+            ...document.querySelectorAll('#__youtube-chapters-in-player__button')]
+        if (chaptersButtons.length) {
+            for (const button of chaptersButtons) {
+                button.style.backgroundColor = 'unset';
+            }
+        }
+    })
+
 }
 
 document.addEventListener('click', e => {
