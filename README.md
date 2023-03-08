@@ -1,4 +1,4 @@
-# YouTube Chapters in Player
+# YouTube Chapters In Player
 Web extension that shows YouTube chapters right in the player.
 
 https://ris58h.github.io/youtube-chapters-in-player/
