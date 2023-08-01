@@ -1,0 +1,12 @@
+{
+    "name": "youtube-chapters-in-player",
+    "type": "module",
+    "scripts": {
+        "dist": "node dist.js"
+    },
+    "devDependencies": {
+        "@types/chrome": "^0.0.197",
+        "archiver": "^3.0.0",
+        "eslint": "^8.5.0"
+    }
+}
