@@ -11,7 +11,7 @@ async function main() {
         return
     }
 
-    let chapters = await fetchChapters(videoId)
+    const chapters = await fetchChapters(videoId)
 
     if (videoId !== getVideoId()) {
         return
@@ -91,14 +91,14 @@ function createChaptersButton(chapters) {
 }
 
 function setChaptersMenuButtonText(text) {
-    let buttonContent = document.querySelector('#__youtube-chapters-in-player__button .ytp-chapter-title-content')
+    const buttonContent = document.querySelector('#__youtube-chapters-in-player__button .ytp-chapter-title-content')
     if (buttonContent) {
         buttonContent.textContent = text ? text : 'Chapters'
     }
 }
 
 function removeChaptersButton() {
-    let chaptersButton = getChaptersButton()
+    const chaptersButton = getChaptersButton()
     if (chaptersButton) {
         chaptersButton.remove()
     }
@@ -207,7 +207,7 @@ function selectChaptersMenuItemAtIndex(chapterIndex) {
 }
 
 function removeChaptersMenu() {
-    let chaptersMenu = getChaptersMenu()
+    const chaptersMenu = getChaptersMenu()
     if (chaptersMenu) {
         chaptersMenu.remove()
     }
