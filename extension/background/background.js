@@ -1,7 +1,7 @@
 import * as youtubei from './youtubei.js'
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.type == 'fetchChapters') {
+    if (request.type === 'fetchChapters') {
         fetchChapters(request.videoId)
             .then(sendResponse)
             .catch(e => {
