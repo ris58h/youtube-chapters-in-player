@@ -1,5 +1,5 @@
 .ytp-chapter-container:not(#__youtube-chapters-in-player__button) {
-    display: none;
+    display: none !important;
 }
 
 .ad-showing #__youtube-chapters-in-player__button {
