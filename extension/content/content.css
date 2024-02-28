@@ -1,5 +1,5 @@
 .ytp-chapter-container:not(#__youtube-chapters-in-player__button) {
-    display: none;
+  display: none;
 }
 
 /* https://stackoverflow.com/questions/1817792/is-there-a-previous-sibling-selector */
@@ -11,199 +11,209 @@ div.ytp-left-controls:hover > #__youtube-chapters-in-player__button {
 } */
 
 .ad-showing #__youtube-chapters-in-player__button {
-    display: none;
+  display: none;
 }
 
 .ytp-embed #__youtube-chapters-in-player__button button {
-    width: 100%;
-    cursor: pointer;
+  width: 100%;
+  cursor: pointer;
 }
 
 #__youtube-chapters-in-player__menu {
-    left: 12px;
-    bottom: 61px;
-    z-index: 71;
+  left: 12px;
+  bottom: 61px;
+  z-index: 71;
 
-    height: calc(100% - 12px - 61px - 20px);
-    max-height: calc(100% - 12px - 61px);
-    width: 100%;
-    min-width: 250px;
-    max-width: calc(100% - 12px - 12px);
-    max-height: calc(100% - 12px - 61px);
+  height: calc(100% - 12px - 61px - 20px);
+  max-height: calc(100% - 12px - 61px);
+  width: 100%;
+  min-width: 250px;
+  max-width: calc(100% - 12px - 12px);
+  max-height: calc(100% - 12px - 61px);
 
-    display: flex;
-    flex-flow: column;
+  display: flex;
+  flex-flow: column;
 }
 
 .ytp-big-mode #__youtube-chapters-in-player__menu {
-    left: 24px;
-    bottom: 70px;
+  left: 24px;
+  bottom: 70px;
 
-    /* height: 80% !important; */
-    width: 1280px;
-    max-width: calc(100% - 24px - 24px);
-    max-height: calc(100% - 24px - 70px);
+  /* height: 80% !important; */
+  width: 1280px;
+  max-width: calc(100% - 24px - 24px);
+  max-height: calc(100% - 24px - 70px);
 }
 
 #player-theater-container #__youtube-chapters-in-player__menu {
-    left: 24px;
-    bottom: 70px;
+  left: 24px;
+  bottom: 70px;
 
-    /* height: 80% !important; */
-    width: 1280px;
-    max-width: 75% !important;
-    max-height: calc(100% - 24px - 70px);
+  /* height: 80% !important; */
+  width: 1280px;
+  max-width: 75% !important;
+  max-height: calc(100% - 24px - 70px);
 }
 
 #__youtube-chapters-in-player__menu .ytp-panel {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 
-    position: static;
+  position: static;
 }
 
 .ytp-big-mode #__youtube-chapters-in-player__menu .ytp-panel {
-    width: 100% !important;
-    height: 100% !important;
+  width: 100% !important;
+  height: 100% !important;
 
-    position: static !important;
+  position: static !important;
 }
 
 #player-theater-container #__youtube-chapters-in-player__menu .ytp-panel {
-    width: 100% !important;
-    height: 100% !important;
+  width: 100% !important;
+  height: 100% !important;
 
-    position: static !important;
+  position: static !important;
 }
 
-
-#__youtube-chapters-in-player__menu .chapters-menuitem[aria-checked=true] {
-    background-color: rgba(255, 255, 255, .1)
+#__youtube-chapters-in-player__menu .chapters-menuitem[aria-checked="true"] {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
-#__youtube-chapters-in-player__menu 
-    .chapters-menuitem[aria-checked=true] .chapters-icon::before {
-    content: '•';
-    font-weight: bold;
+#__youtube-chapters-in-player__menu
+  .chapters-menuitem[aria-checked="true"]
+  .chapters-icon::before {
+  content: "•";
+  font-weight: bold;
 }
 
 #__youtube-chapters-in-player__menu__buttons {
-    box-shadow: 0 0 0 1px rgba(255,255,255,.2);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
 }
 
 #__youtube-chapters-in-player__menu__buttons button {
-    text-align: center;
-    width: 50%;
+  text-align: center;
+  width: 50%;
 }
 
 .highlighted {
-    color: yellow !important;
-    background-color: gray !important;
-    opacity: 0.8;
+  color: yellow !important;
+  background-color: gray !important;
+  opacity: 0.8;
 }
 
 .ytp-panel-menu {
-    display: flex !important;
-    flex-direction: column;
-    justify-content: end !important;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: end !important;
 
-    width: 100% !important;
-    overflow-y: scroll !important;
+  width: 100% !important;
+  overflow-y: scroll !important;
 }
 
 .ytp-big-mode .ytp-panel-menu {
-    display: flex !important;
-    flex-direction: column;
-    justify-content: end !important;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: end !important;
 
-    width: 100% !important;
-    overflow-y: scroll !important;
+  width: 100% !important;
+  overflow-y: scroll !important;
 }
 
 #player-theater-container .ytp-panel-menu {
-    display: flex !important;
-    flex-direction: column;
-    justify-content: end !important;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: end !important;
 
-    width: 100% !important;
-    overflow-y: scroll !important;
+  width: 100% !important;
+  overflow-y: scroll !important;
 }
 
 .chapters-menuitem {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: start !important;
-    justify-content: start !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: start !important;
+  justify-content: start !important;
 
-    height: 30px !important;
-    padding: 4px 0 0 0 !important;
+  /* height: 30px !important; */
+  padding: 4px 0 0 0 !important;
 }
 
 .ytp-big-mode .ytp-panel > .ytp-panel-menu > .chapters-menuitem {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: start !important;
-    justify-content: start !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: start !important;
+  justify-content: start !important;
 
-    height: 35px !important;
-    padding: 4px 0 0 0 !important;
+  /* height: 35px !important; */
+  padding: 4px 0 0 0 !important;
 }
 
-.chapters-label, 
-.chapters-icon, 
+.chapters-label,
+.chapters-icon,
 .chapters-content {
-    padding: 0 4px !important;
-    vertical-align: text-top !important;
+  padding: 0 4px !important;
+  vertical-align: text-top !important;
 
-    font-size: 14px !important;
+  font-size: 14px !important;
 }
 
-.ytp-big-mode 
-    .chapters-label, 
-    .chapters-icon, 
-    .chapters-content {
-    padding: 0 4px !important;
-    vertical-align: text-top !important;
+.ytp-big-mode .chapters-label,
+.chapters-icon,
+.chapters-content {
+  padding: 0 4px !important;
+  vertical-align: text-top !important;
 
-    font-size: 18px !important;
+  font-size: 18px !important;
 }
 
 #player-theater-container .chapters-menuitem {
-    height: 30px !important;
+  height: 30px !important;
 }
 
-#player-theater-container 
-.chapters-label, 
-.chapters-icon, 
+#player-theater-container .chapters-label,
+.chapters-icon,
 .chapters-content {
-    font-size: 14px !important;
+  font-size: 14px !important;
 }
 
 .chapters-icon {
-    flex: 1.5rem 0 0 !important;
+  flex: 1.5rem 0 0 !important;
 }
 
 .chapters-content {
-    flex: 5rem 0 0 !important;
-    text-align: right;
+  flex: 5rem 0 0 !important;
+  text-align: right;
 }
 
-.ytp-big-mode .ytp-panel > .ytp-panel-menu > .chapters-menuitem > .chapters-icon {
-    display: unset !important;
-    flex: 2rem 0 0 !important;
+.ytp-big-mode
+  .ytp-panel
+  > .ytp-panel-menu
+  > .chapters-menuitem
+  > .chapters-icon {
+  display: unset !important;
+  flex: 2rem 0 0 !important;
 }
 
-.ytp-big-mode .ytp-panel > .ytp-panel-menu > .chapters-menuitem > .chapters-content {
-    display: unset !important;
-    flex: 8rem 0 0 !important;
-    text-align: right;
+.ytp-big-mode
+  .ytp-panel
+  > .ytp-panel-menu
+  > .chapters-menuitem
+  > .chapters-content {
+  display: unset !important;
+  flex: 8rem 0 0 !important;
+  text-align: right;
 }
 
-.ytp-big-mode .ytp-panel > .ytp-panel-menu > .chapters-menuitem > .chapters-label {
-    display: unset !important;
+.ytp-big-mode
+  .ytp-panel
+  > .ytp-panel-menu
+  > .chapters-menuitem
+  > .chapters-label {
+  display: unset !important;
 }
 
 .chapters-menuitem:hover {
-    background-color: blue !important;
-    color: yellow;
+  background-color: blue !important;
+  color: yellow;
 }
