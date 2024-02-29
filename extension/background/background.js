@@ -79,13 +79,15 @@ async function fetchChaptersFromComments(videoResponse) {
 }
 
 function getTimestampContexts(text, lengthSeconds) {
+    console.log('function getTimestampContexts')
     const timestampSplitPattern = /((?:\d?\d:)?(?:\d?\d:)\d\d)(?:\s|$)/
 
     const chapters = []
     const lines = text.split(/\r?\n/)
 
     for (let i = 0; i < lines.length; i++) {
-        const parts = lines[i]
+        // const parts = lines[i]
+        let parts = lines[i]
             .trim()
             .split(timestampSplitPattern) 
 
@@ -120,21 +122,47 @@ function getTimestampContexts(text, lengthSeconds) {
         // =>
         // ['Линус Торвальдс: программирование ', '1:23:25', 'код ', '01:23:50', 'структуры данных ', '1:25:00', '']           
 
-        // Example 6 (super-abnormal case: kinda-titles both before timestamps and after timestapls):
+        // Example 6 (super-abnormal case: kinda-titles both before timestamps and after timestamps):
         // 'Great video, but the molecule shown at 2:25 was not nitroglycerin but tri nitro toluene (TNT). Also the lattice shown for metallic bonds at 3:53 applies to ionic bonds as well. Small points but otherwise really great stuff!'
         // =>
-        // ['Great video, but the molecule shown at ', '2:25', 'was not nitroglycerin but tri nitro toluene (TNT). Also the lattice shown for metallic bonds at ', '3:53', 'applies to ionic bonds as well. Small points but otherwise really great stuff! ']           
+        // ['Great video, but the molecule shown at ', '2:25', 'was not nitroglycerin but tri nitro toluene (TNT). Also the lattice shown for metallic bonds at ', '3:53', 'applies to ionic bonds as well. Small points but otherwise really great stuff! ']       
+        
+        // Example 7 (abbnormal case: beginning-timestamp, ending-timestamp, and chapter title)
+        // '00:00:00 - 00:19:38 - AGI and Cognitive Architectures'
+        // This text structure produces 5 parts:
+        // Part 0: an empty string
+        // Part 1: chapter beginning-timestamp 
+        // Part 2: '-' character
+        // Part 3: chapter ending-timestamp 
+        // Part 4: '-' character followed by the chapter title 
 
         if (parts.length < 3) {
             continue
         }
 
+        // console.log('parts =', parts)
+        // console.log('parts.length =', parts.length)
+
         if (parts[0].length && parts[parts.length - 1].length) { 
             // super-abnormal case (which is usually a good candidate for rejection), 
             // because both normal and abnormal cases should have an empty string
             // either at the very end or at very beginning of the array of strings
+            // console.log('Skipping super-abnormal case...')
             continue
         }
+
+        // console.log('Got here 1')
+
+        // ['', '00:37:40', '- ', '00:44:00', '- Forecasts for Next Few Years']
+        if (parts.length === 5 && parts[0] === '' && parts[2].trim() === '-'
+            && parts[1].match(timestampSplitPattern) && parts[3].match(timestampSplitPattern)) {
+                // Removing dash and chapter ending-timestamp
+                // console.log('Removing first dash and chapter ending-timestamp...')
+                parts = [parts[0], parts[1], parts[4]]
+                // console.log('parts =', parts)
+        }
+
+        // console.log('Got here 2')
 
         const isTitleBeforeTimestamp = parts[0].trim().length
         const startPos = isTitleBeforeTimestamp ? 0 : 1
