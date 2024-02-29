@@ -158,7 +158,8 @@ function getTimestampContexts(text, lengthSeconds) {
             && parts[1].match(timestampSplitPattern) && parts[3].match(timestampSplitPattern)) {
                 // Removing dash and chapter ending-timestamp
                 // console.log('Removing first dash and chapter ending-timestamp...')
-                parts = [parts[0], parts[1], parts[4]]
+                // parts = [parts[0], parts[1], parts[4]]
+                parts.splice(2, 2)
                 // console.log('parts =', parts)
         }
 
