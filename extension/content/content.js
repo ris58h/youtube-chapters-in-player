@@ -451,6 +451,17 @@ Support the channel by becoming a Patron today! 👉
         const timestampMatch = url.match(timestampRegexp)
         if (!timestampMatch) continue
 
+        // Need to handle abnormal cases like this:
+        /*
+        00:00:00 - 00:19:38 - AGI and Cognitive Architectures
+        */
+        const spanBefore = anchor.previousElementSibling
+        console.log('spanBefore =', spanBefore)
+        if (spanBefore && spanBefore.tagName === 'SPAN' && spanBefore.textContent.trim() !== '') {
+            console.log('Skipping non-empty spanBefore!')
+            continue
+        }
+
         const titleElement = anchor.nextElementSibling
         if (!titleElement || titleElement.tagName !== 'SPAN') continue
 
