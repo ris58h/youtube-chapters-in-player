@@ -1,12 +1,12 @@
 // Youtubei API declines requests with wrong Origin.
 // We need to remove the Origin header which is added automatically by the browser.
-chrome.permissions.contains({ 
+chrome.permissions.contains({
     permissions: ['webRequestBlocking'],
     origins: ['https://www.youtube.com/']
 }, (permissionExists) => {
     // In Chrome/Chromium (Manifest V3) Origin is removed via declarative net request.
     // See `declarative_net_request` property in the manifest.
-    if (!permissionExists) { 
+    if (!permissionExists) {
         return
     }
 
@@ -31,7 +31,10 @@ const engagementPanelIds = [
 ]
 
 export function chaptersFromVideoResponse(videoResponse) {
-    const result = videoResponse.find(e => e.response).response
+    const response = Array.isArray(videoResponse)
+        ? videoResponse.find(e => e.response).response
+        : videoResponse.response
+    const result = response
         .engagementPanels.find(e => e.engagementPanelSectionListRenderer && engagementPanelIds.includes(e.engagementPanelSectionListRenderer.panelIdentifier))
         ?.engagementPanelSectionListRenderer.content.macroMarkersListRenderer.contents
         .map(content => content.macroMarkersListItemRenderer ? macroMarkersListItemRendererToChapter(content.macroMarkersListItemRenderer) : null)
@@ -100,14 +103,17 @@ export async function fetchComments(videoResponse) {
                 .map(run => run.text)
                 .join("")
             comments.push({ text, isPinned })
-        } 
+        }
     }
 
     return comments
 }
 
 function commentsContinuationToken(videoResponse) {
-    return videoResponse.find(e => e.response).response
+    const response = Array.isArray(videoResponse)
+        ? videoResponse.find(e => e.response).response
+        : videoResponse.response
+    return response
         .contents.twoColumnWatchNextResults.results.results
         .contents.find(e => e.itemSectionRenderer && e.itemSectionRenderer.sectionIdentifier === 'comment-item-section').itemSectionRenderer
         .contents[0].continuationItemRenderer // When comments are disabled there is messageRenderer instead.
