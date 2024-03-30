@@ -10,7 +10,10 @@ const version = readJsonSync("./extension/manifest.json").version
 const output = fs.createWriteStream(`./dist/${name}-${version}.zip`)
 const archive = archiver("zip")
 archive.pipe(output)
-archive.glob("**/*", { cwd: "./extension" })
+archive.glob("**/*", {
+    cwd: "./extension",
+    ignore: ["_metadata/**"],
+})
 archive.on("error", err => { throw err })
 archive.finalize()
 
