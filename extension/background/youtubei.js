@@ -6,16 +6,22 @@ const engagementPanelIds = [
 ]
 
 export function chaptersFromVideoResponse(videoResponse) {
-    const result = videoResponse.find(e => e.response).response
+    console.log('function chaptersFromVideoResponse :: videoResponse =', videoResponse)
+
+    // const result = videoResponse.find(e => e.response).response
+    const result = videoResponse.response
         .engagementPanels.find(e => e.engagementPanelSectionListRenderer && engagementPanelIds.includes(e.engagementPanelSectionListRenderer.panelIdentifier))
         ?.engagementPanelSectionListRenderer.content.macroMarkersListRenderer.contents
         .map(content => content.macroMarkersListItemRenderer ? macroMarkersListItemRendererToChapter(content.macroMarkersListItemRenderer) : null)
         .filter(e => e ? true : false)
+
     return result ? result : []
 }
 
 export function lengthSecondsFromVideoResponse(videoResponse) {
-    const { playerResponse } = videoResponse.find((item) => item.playerResponse)
+    console.log('function lengthSecondsFromVideoResponse :: videoResponse =', videoResponse)
+    // const { playerResponse } = videoResponse.find((item) => item.playerResponse)
+    const { playerResponse } = videoResponse
     const { lengthSeconds } = playerResponse.microformat.playerMicroformatRenderer
     return lengthSeconds
 }
@@ -70,12 +76,14 @@ export async function fetchComments(videoResponse) {
     if (!items) {
         return []
     }
+    console.log('youtubei.js :: function fetchComments :: items =', items)
 
     const comments = []
 
     for (const item of items) {
-        if (item.commentThreadRenderer) {
-            const cr = item.commentThreadRenderer.comment.commentRenderer
+        const cr = item?.commentThreadRenderer?.comment?.commentRenderer
+        if (cr) {
+            console.log('item.commentThreadRenderer = ', item.commentThreadRenderer)
             const isPinned = cr.pinnedCommentBadge;
             const text = cr.contentText.runs
                 .map(run => run.text)
@@ -88,7 +96,13 @@ export async function fetchComments(videoResponse) {
 }
 
 function commentsContinuationToken(videoResponse) {
-    return videoResponse.find(e => e.response).response
+    // if (!(find in videoResponse)) {
+    //     console.log('function commentsContinuationToken :: No find in videoResponse !!!')
+    //     return null
+    // }
+
+    // return videoResponse.find(e => e.response).response
+    return videoResponse.response
         .contents.twoColumnWatchNextResults.results.results
         .contents.find(e => e.itemSectionRenderer && e.itemSectionRenderer.sectionIdentifier === 'comment-item-section').itemSectionRenderer
         .contents[0].continuationItemRenderer // When comments are disabled there is messageRenderer instead.

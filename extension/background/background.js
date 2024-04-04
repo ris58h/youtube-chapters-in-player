@@ -38,7 +38,17 @@ function setUpWebRequestOriginRemoval() {
 
 async function fetchChapters(videoId) {
     const videoResponse = await youtubei.fetchVideo(videoId)
+    // if (!(find in videoResponse)) {
+    //     console.log('function fetchChapters :: No find in videoResponse !!!')
+    //     console.log('function fetchChapters :: videoResponse.response = ', videoResponse.response)
+    //     console.log('videoResponse =', videoResponse)
+    //     return []
+    // }
+    console.log('function fetchChapters :: videoResponse =', videoResponse)
+    console.log('function fetchChapters :: videoResponse.response = ', videoResponse.response)
+
     const videoResponseChapters = youtubei.chaptersFromVideoResponse(videoResponse)
+    console.log('function fetchChapters :: videoResponseChapters =', videoResponseChapters)
 
     const commentChapters = await fetchChaptersFromComments(videoResponse)
 
