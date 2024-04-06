@@ -68,12 +68,15 @@ async function fetchChapters(videoId) {
 
 async function fetchChaptersFromComments(videoResponse) {
     const comments = await youtubei.fetchComments(videoResponse)
+    console.log('function fetchChaptersFromComments :: comments =', comments)
     const lengthSeconds = parseInt(youtubei.lengthSecondsFromVideoResponse(videoResponse))
+    console.log('function fetchChaptersFromComments :: lengthSeconds =', lengthSeconds)
     const minNumChapters = 2
     let chapters = []
 
     for (let i = 0; i < comments.length; i++) {
         const currentChapters = getTimestampContexts(comments[i].text, lengthSeconds)
+        console.log('i, currentChapters =', i, currentChapters)
         if (currentChapters.length < minNumChapters) {
             continue
         }
@@ -90,10 +93,14 @@ async function fetchChaptersFromComments(videoResponse) {
 
 function getTimestampContexts(text, lengthSeconds) {
     console.log('function getTimestampContexts')
-    const timestampSplitPattern = /((?:\d?\d:)?(?:\d?\d:)\d\d)(?:\s|$)/
+    const timestampSplitPattern = /((?:\d?\d:)?(?:\d?\d:)\d\d)?\:(?:\s|$)/
+    // Examples below:
+    // 01:02:03 some chapter
+    // 01:02:03: another chapter
 
     const chapters = []
     const lines = text.split(/\r?\n/)
+    console.log('function getTimestampContexts :: lines =', lines)
 
     for (let i = 0; i < lines.length; i++) {
         // const parts = lines[i]

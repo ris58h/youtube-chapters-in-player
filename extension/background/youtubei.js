@@ -68,12 +68,17 @@ const INNERTUBE_CLIENT_NAME = "WEB"
 export async function fetchComments(videoResponse) {
     const token = commentsContinuationToken(videoResponse)
     if (!token) {
+        console.log('youtubei.js :: function fetchComments :: No token!!!')
         return []
     }
     const commentsResponse = await fetchNext(token)
+    console.log('youtubei.js :: function fetchComments :: commentsResponse =', commentsResponse)
 
-    const items = commentsResponse.onResponseReceivedEndpoints[1].reloadContinuationItemsCommand.continuationItems
+    const items = commentsResponse?.frameworkUpdates?.entityBatchUpdate?.mutations
+
+    // const items = commentsResponse.onResponseReceivedEndpoints[1].reloadContinuationItemsCommand.continuationItems
     if (!items) {
+        console.log('youtubei.js :: function fetchComments :: No items!!!')
         return []
     }
     console.log('youtubei.js :: function fetchComments :: items =', items)
@@ -81,16 +86,35 @@ export async function fetchComments(videoResponse) {
     const comments = []
 
     for (const item of items) {
-        const cr = item?.commentThreadRenderer?.comment?.commentRenderer
-        if (cr) {
-            console.log('item.commentThreadRenderer = ', item.commentThreadRenderer)
-            const isPinned = cr.pinnedCommentBadge;
-            const text = cr.contentText.runs
-                .map(run => run.text)
-                .join("")
-            comments.push({ text, isPinned })
-        } 
+        // cr = commentRenderer // Historically, but changed somewhere in April 2024 or before
+        // const cr = item?.commentThreadRenderer?.comment?.commentRenderer
+        // const cr = item?.payload?.commentEntityPayload?.properties?.content?.content
+        // if (!cr) {
+        //     console.log('cr not found!!! :: item =', item)
+        //     continue
+        // }
+        // console.log('cr = ', cr)
+
+        const commentText = item?.payload?.commentEntityPayload?.properties?.content?.content
+        if (!commentText) {
+            console.log('commentText not found!!! :: item =', item)
+            continue
+        }
+        console.log('item = ', item)
+        console.log('commentText = ', commentText)
+
+        comments.push({ text: commentText, isPinned: false })
+
+        /*
+        const isPinned = cr.pinnedCommentBadge;
+        const text = cr.contentText.runs
+            .map(run => run.text)
+            .join("")
+        comments.push({ text, isPinned })
+        */
     }
+
+    console.log('comments =', comments)
 
     return comments
 }
