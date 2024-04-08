@@ -5,12 +5,6 @@
     "description": "Shows YouTube chapters right in the player",
     "version": "0.3.3",
 
-    "applications": {
-        "gecko": {
-            "id": "youtube-chapters-in-player@ris58h"
-        }
-    },
-
     "permissions": [
         "webRequest",
         "declarativeNetRequest",

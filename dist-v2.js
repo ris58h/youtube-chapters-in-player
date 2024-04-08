@@ -29,6 +29,11 @@ function patchManifest(manifest) {
     return {
         ...manifest,
         "manifest_version": 2,
+        "applications": {
+            "gecko": {
+                "id": "youtube-chapters-in-player@ris58h"
+            }
+        },
         "permissions": [
             "https://www.youtube.com/*",
             "webRequest",
