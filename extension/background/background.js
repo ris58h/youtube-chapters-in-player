@@ -93,7 +93,7 @@ async function fetchChaptersFromComments(videoResponse) {
 
 function getTimestampContexts(text, lengthSeconds) {
     console.log('function getTimestampContexts')
-    const timestampSplitPattern = /((?:\d?\d:)?(?:\d?\d:)\d\d)?\:(?:\s|$)/
+    const timestampSplitPattern = /((?:\d?\d:)?(?:\d?\d:)\d\d):?(?:\s|$)/
     // Examples below:
     // 01:02:03 some chapter
     // 01:02:03: another chapter
@@ -107,6 +107,17 @@ function getTimestampContexts(text, lengthSeconds) {
         let parts = lines[i]
             .trim()
             .split(timestampSplitPattern) 
+        console.log('function getTimestampContexts :: i, parts =', i, parts)
+
+        /*
+        if (parts.includes(undefined)) { // Edge case
+            // Example:
+            // '🎯 Key Takeaways for quick navigation:'
+            // ->
+            // ['🎯 Key Takeaways for quick navigation', undefined, '']
+            continue
+        }
+        */
 
         // Normally:
         //   parts.length is always an odd number
