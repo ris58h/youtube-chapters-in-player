@@ -4,3 +4,6 @@ node_modules
 dist
 .DS_Store
 _metadata
+
+# Filenames starting with "_" are reserved for use by the system.
+extension/_*

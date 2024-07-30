@@ -12,7 +12,7 @@ const archive = archiver("zip")
 archive.pipe(output)
 archive.glob("**/*", {
     cwd: "./extension",
-    ignore: ["_metadata/**"],
+    ignore: ["_*/**"], // Filenames starting with "_" are reserved for use by the system.
 })
 archive.on("error", err => { throw err })
 archive.finalize()
