@@ -112,6 +112,7 @@ function createChaptersMenu(chapters) {
     const chaptersMenu = document.createElement('div')
     chaptersMenu.id = '__youtube-chapters-in-player__menu'
     chaptersMenu.classList.add('ytp-popup')
+    chaptersMenu.classList.add('ytp-settings-menu')
     chaptersMenu.style.display = 'none'
     document.querySelector('#movie_player').appendChild(chaptersMenu)
 
