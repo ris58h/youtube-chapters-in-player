@@ -75,6 +75,7 @@ function createChaptersButton(chapters) {
     const button = document.createElement('button')
     button.classList.add('ytp-button')
     button.classList.add('ytp-chapter-title')
+    button.classList.add('ytp-autohide-fade-transition')
     chaptersContainer.appendChild(button)
 
     const dot = document.createElement('span')
