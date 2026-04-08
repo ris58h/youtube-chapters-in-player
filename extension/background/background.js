@@ -18,8 +18,25 @@ async function fetchChapters(videoId) {
         return chapters
     }
 
+    chapters = fetchChaptersFromDescription(videoResponse)
+    if (chapters.length) {
+        return chapters
+    }
+
     chapters = await fetchChaptersFromComments(videoResponse)
-    return chapters    
+    return chapters
+}
+
+function fetchChaptersFromDescription(videoResponse) {
+    const description = youtubei.descriptionFromVideoResponse(videoResponse)
+    if (!description) {
+        return []
+    }
+
+    const tsContexts = getTimestampContexts(description)
+    const minNumChapters = 2
+
+    return tsContexts.length >= minNumChapters ? tsContexts : []
 }
 
 async function fetchChaptersFromComments(videoResponse) {
