@@ -53,6 +53,24 @@ function macroMarkersListItemRendererToChapter(renderer) {
     }
 }
 
+export function descriptionFromVideoResponse(videoResponse) {
+    try {
+        const playerResponse = Array.isArray(videoResponse)
+            ? videoResponse.find(e => e.playerResponse)?.playerResponse
+            : videoResponse.playerResponse
+        if (!playerResponse) {
+            return ''
+        }
+        const videoDetails = typeof playerResponse === 'string'
+            ? JSON.parse(playerResponse).videoDetails
+            : playerResponse.videoDetails
+        return videoDetails?.shortDescription || ''
+    } catch (e) {
+        console.error('Failed to extract description from video response', e)
+        return ''
+    }
+}
+
 export async function fetchVideo(videoId) {
     const response = await fetch(`https://www.youtube.com/watch?v=${videoId}&pbj=1`, {
         credentials: "omit",
