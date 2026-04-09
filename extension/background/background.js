@@ -1,5 +1,7 @@
 import * as youtubei from './youtubei.js'
 
+const MIN_NUM_CHAPTERS = 2
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type === 'fetchChapters') {
         fetchChapters(request.videoId)
@@ -34,9 +36,7 @@ function fetchChaptersFromDescription(videoResponse) {
     }
 
     const tsContexts = getTimestampContexts(description)
-    const minNumChapters = 2
-
-    return tsContexts.length >= minNumChapters ? tsContexts : []
+    return tsContexts.length >= MIN_NUM_CHAPTERS ? tsContexts : []
 }
 
 async function fetchChaptersFromComments(videoResponse) {
@@ -47,9 +47,8 @@ async function fetchChaptersFromComments(videoResponse) {
     }
 
     const tsContexts = getTimestampContexts(pinnedComment.text)
-    const minNumChapters = 2
 
-    return tsContexts.length >= minNumChapters ? tsContexts : []
+    return tsContexts.length >= MIN_NUM_CHAPTERS ? tsContexts : []
 }
 
 
